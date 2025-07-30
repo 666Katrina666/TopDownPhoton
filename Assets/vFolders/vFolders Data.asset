@@ -1,0 +1,194 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: adb9c12a8c6c949f7af83a3d238359d0, type: 3}
+  m_Name: vFolders Data
+  m_EditorClassIdentifier: 
+  folderDatas_byGuid:
+    keys:
+    - ef9bb84a40c69ea45852df52597adb70
+    - afd5cd30943855a419f56b3cc1e5c366
+    - a8e515b845ea4bb4c909eb88ed2ac5f1
+    - 3632716e17ea0324d8de68ff73558d1c
+    - 3bd921bf875059a48bb64b7cef9198ee
+    - 51ee10244fb9a514cb2f2999182008a6
+    - b3bd19a51b1500e49a390b00dc9cd897
+    - 077d6b19b0c3e294b83511cf6ac45e57
+    - e781a3a4c86b0eb47b7c59bec6e9403f
+    - 7a8c740487c2c6e4d985f2f47ee67160
+    - aac0e97cb51bb1a4b867a2e0cf6483d8
+    - ae065aa606a7c31419410ddc02669ffd
+    - 591d5b986315e01498ad55b9e47ba235
+    - a8a8152714da0b3458628e918d7d511a
+    - 717c75d4a74140d469663f52e1b9daac
+    - 2aeb6e1efecbd784ea5c645c18163a4f
+    - 9e284406cc20c2644a300e3ea4b5faf6
+    - 4f0998a63fc8132498b46d7a81c80b1b
+    - 524b4b694de0c6042ad4cdd6cc4bad84
+    - bf1cf3b51c568804c8a90627c5b5bffb
+    - 7b135e8c5eeb3be44a8d8b23ec377b6d
+    - 95e0e18ed03081f458503b5f9cd6986e
+    - 37b5fa9b37cba084b9bb747325871380
+    - 11d83f1a901b4404f833bff73d6af040
+    - aea12b82ebb66da43937d21ff92d1db4
+    - d0e92b0c7054dd845a382decac0f9d88
+    - 498581859f31303419d7682b7e016add
+    - 55fa71958decd4644b832a1fa14819a9
+    - 6b48d6f5bdc120342b14af4bd972ed69
+    - b3a5831c2be38c341a6ce93b96264a8a
+    - e3ab33d3151e2ea47a4277a38569929a
+    - 45d24d702c9164441b114edeeb735854
+    - fdbae761987d7b34384303b30930bac1
+    - 98fb95903ee138545b00878c5c485e85
+    - ba5c45fb46c099e4d8ef15209b7a4f37
+    - 8483aa485fc1ed0429f386ee2067fcb3
+    - 6f3bc667a215010419822c554c6ec054
+    - 64597332d044c784293f50f73cb7311d
+    - 37914e961b2b5cf40ba73f47d58dc335
+    - 30433aa4c0b4f8b4eab4efd2d235cd06
+    - 143891eb39d184446a46d0accd3b6121
+    - 68bc2357a24d1614ab5eb5750227caf9
+    - 9ad1f6a2042bee740a5aa557f5872154
+    - 047ab87cb828508419bc2981f0a787a4
+    - 2d33002db3e3cab408c240448cfb25b1
+    - ef1d147045397e84cb2bdbc7a9c5debb
+    - f6131d29417d6b04ebf14ef4501ef096
+    - df2687ec5a6507b438c36b6ed1767f3a
+    - 68870a4cbc7b8594bb86500c861b9e39
+    - f7abd773e7fc23e46b869572584e9f85
+    - ca1a50f37bed6ce4e9307d55e21a8264
+    - ba3007c82deaac84e9b4a37d8bb4ba78
+    - be39eedddeedd1c42b0836d8d2bf5fc4
+    - eecf168063a94d84a9ffa487e7b34cbd
+    - 528db3cd679559241a328618238fa2f5
+    - 72338bc20963a554396c3333f866455b
+    - d9e824a4df99ab84e96fbc6c0b520828
+    - bd8e756def2c48849a3795226a02af14
+    - b20e9e28d5777a94cbdda7b423e6fe28
+    values:
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 1
+      iconNameOrGuid: AnimationClip Icon
+    - colorIndex: 2
+      iconNameOrGuid: TextAsset Icon
+    - colorIndex: 7
+      iconNameOrGuid: cs Script Icon
+    - colorIndex: 3
+      iconNameOrGuid: AudioClip Icon
+    - colorIndex: 4
+      iconNameOrGuid: RawImage Icon
+    - colorIndex: 6
+      iconNameOrGuid: Prefab Icon
+    - colorIndex: 9
+      iconNameOrGuid: SceneAsset Icon
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 6
+      iconNameOrGuid: TextAsset Icon
+    - colorIndex: 0
+      iconNameOrGuid: none
+    - colorIndex: 6
+      iconNameOrGuid: cs Script Icon
+    - colorIndex: 7
+      iconNameOrGuid: 
+    - colorIndex: 0
+      iconNameOrGuid: Light Icon
+    - colorIndex: 5
+      iconNameOrGuid: Font Icon
+    - colorIndex: 5
+      iconNameOrGuid: Shader Icon
+    - colorIndex: 10
+      iconNameOrGuid: RawImage Icon
+    - colorIndex: 5
+      iconNameOrGuid: Shader Icon
+    - colorIndex: 6
+      iconNameOrGuid: ComputeShader Icon
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 3
+      iconNameOrGuid: AudioSource Icon
+    - colorIndex: 7
+      iconNameOrGuid: 
+    - colorIndex: 4
+      iconNameOrGuid: RawImage Icon
+    - colorIndex: 5
+      iconNameOrGuid: Settings Icon
+    - colorIndex: 1
+      iconNameOrGuid: ScriptableObject Icon
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 2
+      iconNameOrGuid: 
+    - colorIndex: 7
+      iconNameOrGuid: 
+    - colorIndex: 5
+      iconNameOrGuid: 
+    - colorIndex: 5
+      iconNameOrGuid: 
+    - colorIndex: 7
+      iconNameOrGuid: 
+    - colorIndex: 5
+      iconNameOrGuid: 
+    - colorIndex: 5
+      iconNameOrGuid: ScriptableObject Icon
+    - colorIndex: 8
+      iconNameOrGuid: ScriptableObject Icon
+    - colorIndex: 3
+      iconNameOrGuid: 
+    - colorIndex: 3
+      iconNameOrGuid: 
+    - colorIndex: 7
+      iconNameOrGuid: 
+    - colorIndex: 2
+      iconNameOrGuid: 
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 8
+      iconNameOrGuid: Font Icon
+    - colorIndex: 5
+      iconNameOrGuid: ComputeShader Icon
+    - colorIndex: 1
+      iconNameOrGuid: Mesh Icon
+    - colorIndex: 5
+      iconNameOrGuid: 
+    - colorIndex: 8
+      iconNameOrGuid: 
+    - colorIndex: 2
+      iconNameOrGuid: AudioMixerController Icon
+    - colorIndex: 8
+      iconNameOrGuid: 
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 3
+      iconNameOrGuid: 
+    - colorIndex: 3
+      iconNameOrGuid: 
+    - colorIndex: 7
+      iconNameOrGuid: 
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 2
+      iconNameOrGuid: LightingDataAsset Icon
+    - colorIndex: 1
+      iconNameOrGuid: 
+    - colorIndex: 2
+      iconNameOrGuid: AudioMixerController Icon
+    - colorIndex: 2
+      iconNameOrGuid: 
+    - colorIndex: 3
+      iconNameOrGuid: 
+    - colorIndex: 5
+      iconNameOrGuid: 
+    - colorIndex: 6
+      iconNameOrGuid: 

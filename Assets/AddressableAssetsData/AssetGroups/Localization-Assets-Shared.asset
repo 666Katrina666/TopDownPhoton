@@ -1,0 +1,182 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-Assets-Shared
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-Assets-Shared
+  m_GUID: a6d3966ebf43df942a116d5506984838
+  m_SerializeEntries:
+  - m_GUID: 0fddf4a763c4c7a4bb1a8e8ecc649bc2
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Settings/Settings
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 181f1d9edf95f0844979de5728d34996
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/LobbyUI/SearchSession
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 1ca6463ffdecc95418fe0f37302147e0
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Hero/Chess Master/Chess
+      Master Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23cf76a08c6148c489582d86455ecd5d
+    m_Address: Assets/_Project/Localization & Fronts/Tables/_Example/Example Hero
+      With Example Skills Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2b3987a701948ab48957c6ff66b0c985
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Localization Scene Controls/Localization
+      Scene Contols Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 302d6b22d324a3f458ce0c94bd696ba2
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Hero/Paladin/Paladin
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 303b1c8311a6a5646abc9e36cd5174ba
+    m_Address: Assets/_Project/Localization & Fronts/Tables/RSV 2024 Edition/Hero/Rifleman
+      (RSV 2024 Edition)/Rifleman (RSV 2024 Edition) Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3185afd1ee222924083e095bf37d0262
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Chat Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 342c294cddf253a4582887de19a50727
+    m_Address: Assets/Localization/Tables/Boss/Berserk Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 38d81710b9133724880fa2124e6eed64
+    m_Address: Assets/_Project/Localization & Fronts/Tables/RSV 2024 Edition/Hero/Shieldbearer
+      (RSV 2024 Edition)/Shieldbearer (RSV 2024 Edition) Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e284e18f151da04a8160ffcd97ecf64
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Hero/Rifleman/Rifleman
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 444065e69da6ffb49930ab123184a827
+    m_Address: Assets/_Project/Localization & Fronts/Tables/RSV 2024 Edition/Hero/Skeleton
+      Priest (RSV 2024 Edition)/Skeleton Priest (RSV 2024 Edition) Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 484836059cb00254f9dfbed3d1905e39
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Tooltip/Skill Tooltip/Skill
+      Tooltip Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 684d135ac1de00a41b94ce64d4fc9f55
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Tooltip/Basic Tooltips/Basic
+      Tooltips Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7faa15ee252289e4c9bf649adfc624b5
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Buff/Buff Table Shared
+      Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 84c3fd870064ab64b8be32739d5ceefb
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/In Lobby Menu/In Lobby
+      Menu Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8afda8ca7b30f0248af5fc71a4236387
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Create Lobby/Create
+      Lobby Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9dec38d25bc2dad498a66b47a34b1856
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Stage Name/Stage Name
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a1a7281ccebd636448de4901cc453f81
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Loading/Loading Shared
+      Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ae76812fab364d945afea95800a09de7
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Hero/Magic Demolition/Magic
+      Demolition Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bf4188e66a021a24aaa032659a997710
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Hero/Priest/Priest Shared
+      Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: caaf4f6a0b6030e4f81a87811b371496
+    m_Address: Assets/_Project/Localization & Fronts/Tables/RSV 2024 Edition/Hero/Chess
+      Master (RSV 2024 Edition)/Chess Master (RSV 2024 Edition) Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ccf0cd8aa40226547b22b413dd887098
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Hero/Hero Type/Hero Type
+      Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e04c2a0e30be7224b81a652903df7a48
+    m_Address: Assets/_Project/Localization/Tables/UI/Main Menu Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f0d4dd247663331448d1706783f5f8cb
+    m_Address: Assets/_Project/Localization & Fronts/Tables/Quest/Heads Or Tails
+      Quest Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f3bd6d6817ff17a4c892336e85c69746
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Guide/Guide Shared
+      Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f7b636a4f2cbfe3438bc80e25673b50c
+    m_Address: Assets/_Project/Localization & Fronts/Tables/UI/Character Choice/Character
+      Choice Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: 3ed0f1efb07ee6a4f9f4ac9b1e75685c, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 8c809b7c87bce2149806e3818434e375, type: 2}
+    - {fileID: 11400000, guid: 88cb2b07df640d54fa443716d3d93d8a, type: 2}
