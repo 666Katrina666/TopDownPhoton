@@ -16,4 +16,5 @@ public interface INetworkService
     void ConnectToLobby(string roomName = "");
     void Disconnect();
     void Shutdown();
+    void LoadScene(string sceneName);
 } 

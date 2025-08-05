@@ -8,7 +8,6 @@ using Core.Base;
 /// </summary>
 public class LobbyButtonController : LoggableMonoBehaviour
 {
-    [Title("Runtime Data")]
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private GameConfig _gameConfig;

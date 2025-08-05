@@ -10,26 +10,25 @@ using Core.Base;
 /// </summary>
 public class GameBootstrap : LoggableMonoBehaviour
 {
-    [Title("Game Bootstrap")]
     [FoldoutGroup("Dependencies")]
     [InfoBox("Зависимости")]
     [ShowInInspector, ReadOnly]
     private GameConfig _gameConfig;
-    
+    [FoldoutGroup("Dependencies")]
     [ShowInInspector, ReadOnly]
     private INetworkService _networkService;
-    
+    [FoldoutGroup("Dependencies")]
     [ShowInInspector, ReadOnly]
     private ISceneService _sceneService;
     
     [Inject] private INetworkService _injectedNetworkService;
     [Inject] private ISceneService _injectedSceneService;
+    [Inject] private DiContainer _container;
     
-    [Title("Settings")]
     [FoldoutGroup("Settings")]
     [InfoBox("Настройки инициализации")]
     [SerializeField] private bool _isPersistent = true;
-    
+    [FoldoutGroup("Settings")]
     [SerializeField] private bool _handleSceneChanges = true;
     
     private void Awake()
@@ -78,6 +77,19 @@ public class GameBootstrap : LoggableMonoBehaviour
         
         Log($"Dependencies initialized. GameConfig: {_gameConfig?.name}");
         
+        // Принудительно инициализируем сервисы, если они еще не созданы
+        if (_networkService == null)
+        {
+            LogWarning("NetworkService is null, attempting to resolve from container");
+            _networkService = _container.Resolve<INetworkService>();
+        }
+        
+        if (_sceneService == null)
+        {
+            LogWarning("SceneService is null, attempting to resolve from container");
+            _sceneService = _container.Resolve<ISceneService>();
+        }
+        
         SubscribeToEvents();
         
         InitializeGame();
@@ -85,14 +97,12 @@ public class GameBootstrap : LoggableMonoBehaviour
     
     private void SubscribeToEvents()
     {
-        EventBus.Subscribe<GameStartedEvent>(OnGameStarted);
         EventBus.Subscribe<SceneChangedEvent>(OnSceneChanged);
         EventBus.Subscribe<NetworkConnectedEvent>(OnNetworkConnected);
     }
     
     private void UnsubscribeFromEvents()
     {
-        EventBus.Unsubscribe<GameStartedEvent>(OnGameStarted);
         EventBus.Unsubscribe<SceneChangedEvent>(OnSceneChanged);
         EventBus.Unsubscribe<NetworkConnectedEvent>(OnNetworkConnected);
     }
@@ -122,11 +132,6 @@ public class GameBootstrap : LoggableMonoBehaviour
         
         Log("Game initialization completed");
     }
-    private void OnGameStarted(GameStartedEvent evt)
-    {
-        Log($"Game started: {evt.GameSceneName}");
-    }
-    
     private void OnSceneChanged(SceneChangedEvent evt)
     {
         Log($"Scene changed from {evt.PreviousScene} to {evt.CurrentScene}");

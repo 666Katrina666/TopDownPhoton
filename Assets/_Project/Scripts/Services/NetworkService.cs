@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Sirenix.OdinInspector;
 using Zenject;
 using Core.Base;
@@ -9,12 +10,10 @@ using Core.Base;
 /// </summary>
 public class NetworkService : LoggableMonoBehaviour, INetworkService
 {
-    
-    [Title("Runtime Data")]
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private NetworkRunner _networkRunner;
-    
+    [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private string _currentRoomName = "";
     
@@ -63,6 +62,23 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
             _networkRunner.Shutdown();
         }
         _currentRoomName = "";
+    }
+    
+    public void LoadScene(string sceneName)
+    {
+        Log($"NetworkService - LoadScene called with: {sceneName}");
+        
+        // Проверяем, что NetworkRunner существует, работает и не находится в процессе завершения
+        if (_networkRunner != null && _networkRunner.IsRunning && !_networkRunner.IsShutdown)
+        {
+            Log($"NetworkService - Loading scene via NetworkRunner: {sceneName}");
+            _networkRunner.LoadScene(sceneName);
+        }
+        else
+        {
+            Log($"NetworkService - NetworkRunner unavailable (null: {_networkRunner == null}, running: {_networkRunner?.IsRunning}, shutdown: {_networkRunner?.IsShutdown}), loading scene via SceneManager: {sceneName}");
+            SceneManager.LoadScene(sceneName);
+        }
     }
     
     [Inject]

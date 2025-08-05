@@ -10,31 +10,29 @@ using Zenject;
 /// </summary>
 public class NetworkCallbackHandler : NetworkCallbackBase
 {
-    private const string DEBUG_PREFIX = "[NetworkCallbackHandler]";
-    
-    [Title("Runtime Data")]
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private NetworkController _networkController;
-    
+    [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private NetworkRunner _networkRunner;
-    
+    [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private NetworkConnectionManager _connectionManager;
     
     [Inject] private NetworkController _injectedNetworkController;
     [Inject] private NetworkRunner _injectedNetworkRunner;
     [Inject] private NetworkConnectionManager _injectedConnectionManager;
+    [Inject] private DiContainer _container;
     
     private void Awake()
     {
-        Debug.Log($"{DEBUG_PREFIX} - Awake");
+        Log("Awake");
     }
     
     private void OnDestroy()
     {
-        Debug.Log($"{DEBUG_PREFIX} - OnDestroy");
+        Log("OnDestroy");
     }
     
     private void Start()
@@ -43,7 +41,26 @@ public class NetworkCallbackHandler : NetworkCallbackBase
         _networkRunner = _injectedNetworkRunner;
         _connectionManager = _injectedConnectionManager;
         
-        Debug.Log($"{DEBUG_PREFIX} - Dependencies injected: NetworkController={_networkController}, NetworkRunner={_networkRunner}, ConnectionManager={_connectionManager}");
+        Log($"Dependencies injected: NetworkController={_networkController}, NetworkRunner={_networkRunner}, ConnectionManager={_connectionManager}");
+        
+        // Попытка получить зависимости из контейнера, если они не инжектированы
+        if (_networkController == null && _container != null)
+        {
+            LogWarning("NetworkController is null, attempting to resolve from container");
+            _networkController = _container.Resolve<NetworkController>();
+        }
+        
+        if (_networkRunner == null && _container != null)
+        {
+            LogWarning("NetworkRunner is null, attempting to resolve from container");
+            _networkRunner = _container.Resolve<NetworkRunner>();
+        }
+        
+        if (_connectionManager == null && _container != null)
+        {
+            LogWarning("ConnectionManager is null, attempting to resolve from container");
+            _connectionManager = _container.Resolve<NetworkConnectionManager>();
+        }
         
         if (_networkRunner != null)
         {
@@ -58,19 +75,19 @@ public class NetworkCallbackHandler : NetworkCallbackBase
             _networkRunner = networkRunner;
             _networkRunner.AddCallbacks(this);
             
-            Debug.Log($"{DEBUG_PREFIX} - NetworkRunner setup complete: {_networkRunner}");
+            Log($"NetworkRunner setup complete: {_networkRunner}");
         }
     }
     public override void OnConnectedToServer(NetworkRunner runner)
     {
-        Debug.Log($"{DEBUG_PREFIX} - Connected to server. Runner: {runner}, IsServer: {runner.IsServer}, IsClient: {runner.IsClient}, LocalPlayer: {runner.LocalPlayer}");
+        Log($"Connected to server. Runner: {runner}, IsServer: {runner.IsServer}, IsClient: {runner.IsClient}, LocalPlayer: {runner.LocalPlayer}");
         
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(ConnectionState.Connected, "Connected to server"));
     }
     
     public override void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        Debug.LogWarning($"{DEBUG_PREFIX} - Connection failed: {reason}. RemoteAddress: {remoteAddress}");
+        LogWarning($"Connection failed: {reason}. RemoteAddress: {remoteAddress}");
         
         EventBus.RaiseEvent(new ConnectionErrorEvent($"Connection failed: {reason}"));
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(ConnectionState.Error, $"Connection failed: {reason}"));
@@ -80,7 +97,7 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        Debug.Log($"{DEBUG_PREFIX} - Disconnected from server. Runner: {runner}");
+        Log($"Disconnected from server. Runner: {runner}");
         
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(ConnectionState.Disconnected, "Disconnected from server"));
         
@@ -89,7 +106,7 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
     {
-        Debug.Log($"{DEBUG_PREFIX} - Player joined. Player: {player}, IsLocalPlayer: {player == runner.LocalPlayer}, IsServer: {runner.IsServer}");
+        Log($"Player joined. Player: {player}, IsLocalPlayer: {player == runner.LocalPlayer}, IsServer: {runner.IsServer}");
         
         EventBus.RaiseEvent(new PlayerJoinedEvent(player, player == runner.LocalPlayer));
         
@@ -101,7 +118,7 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) 
     {
-        Debug.Log($"{DEBUG_PREFIX} - Shutdown reason: {shutdownReason}. Runner: {runner}");
+        Log($"Shutdown reason: {shutdownReason}. Runner: {runner}");
         
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(ConnectionState.Disconnected, $"Shutdown: {shutdownReason}"));
         
@@ -110,21 +127,21 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnPlayerLeft(NetworkRunner runner, PlayerRef player) 
     {
-        Debug.Log($"{DEBUG_PREFIX} - Player left. Player: {player}, IsLocalPlayer: {player == runner.LocalPlayer}");
+        Log($"Player left. Player: {player}, IsLocalPlayer: {player == runner.LocalPlayer}");
         
         EventBus.RaiseEvent(new PlayerLeftEvent(player, player == runner.LocalPlayer));
     }
     
     public override void OnSceneLoadStart(NetworkRunner runner)
     {
-        Debug.Log($"{DEBUG_PREFIX} - Scene load start. Runner: {runner}");
+        Log($"Scene load start. Runner: {runner}");
         
         EventBus.RaiseEvent(new SceneLoadStartEvent());
     }
     
     public override void OnSceneLoadDone(NetworkRunner runner) 
     {
-        Debug.Log($"{DEBUG_PREFIX} - Scene load done. Runner: {runner}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
+        Log($"Scene load done. Runner: {runner}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
         
         EventBus.RaiseEvent(new SceneLoadDoneEvent());
     }

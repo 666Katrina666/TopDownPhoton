@@ -1,6 +1,0 @@
----
-description: |
-  ВСЕГДА используй `Object.FindObjectsByType<T>()` вместо устаревшего `FindObjectsOfType<T>()`.
-globs: "*.cs"
-alwaysApply: false 
----

@@ -8,14 +8,13 @@ using Core.Base;
 /// </summary>
 public class ConfigManagerExample : LoggableMonoBehaviour
 {
-    [Title("Config Manager Example")]
     [FoldoutGroup("Runtime Info")]
     [ShowInInspector, ReadOnly]
     private bool _isConfigInitialized;
-    
+    [FoldoutGroup("Runtime Info")]
     [ShowInInspector, ReadOnly]
     private string _currentGameScene;
-    
+    [FoldoutGroup("Runtime Info")]
     [ShowInInspector, ReadOnly]
     private bool _debugLogsEnabled;
     

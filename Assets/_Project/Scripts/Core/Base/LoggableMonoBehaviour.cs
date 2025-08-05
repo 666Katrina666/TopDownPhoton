@@ -1,4 +1,5 @@
 using UnityEngine;
+using Sirenix.OdinInspector;
 
 namespace Core.Base
 {
@@ -7,7 +8,8 @@ namespace Core.Base
     /// </summary>
     public abstract class LoggableMonoBehaviour : MonoBehaviour
     {
-        [Header("Debug Settings")]
+        [FoldoutGroup("Debug Settings")]
+        [InfoBox("Настройки отладки")]
         [SerializeField] protected bool enableLogging = true;
 
         /// <summary>
@@ -28,10 +30,7 @@ namespace Core.Base
         /// <param name="message">Сообщение для вывода</param>
         protected void LogWarning(string message)
         {
-            if (enableLogging)
-            {
-                Debug.LogWarning($"[{GetType().Name}] - {message}");
-            }
+            Debug.LogWarning($"[{GetType().Name}] - {message}");
         }
 
         /// <summary>
@@ -40,10 +39,7 @@ namespace Core.Base
         /// <param name="message">Сообщение для вывода</param>
         protected void LogError(string message)
         {
-            if (enableLogging)
-            {
-                Debug.LogError($"[{GetType().Name}] - {message}");
-            }
+            Debug.LogError($"[{GetType().Name}] - {message}");
         }
     }
 } 

@@ -17,7 +17,7 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private ConnectionState _currentState = ConnectionState.Disconnected;
-    
+    [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private string _currentRoomName = "";
     
@@ -31,9 +31,9 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
     [Inject] private ISceneService _injectedSceneService;
     [Inject] private NetworkCallbackHandler _injectedCallbackHandler;
     
-    [Title("Network Configuration")]
     [FoldoutGroup("Network Configuration")]
     [SerializeField] private string _defaultSceneName = "LobbyScene";
+    [FoldoutGroup("Network Configuration")]
     [SerializeField] private int _maxPlayerCount = 4;
     
     private CancellationTokenSource _connectionCancellationTokenSource;

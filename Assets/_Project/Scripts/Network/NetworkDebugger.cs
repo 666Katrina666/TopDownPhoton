@@ -10,8 +10,6 @@ using Zenject;
 /// </summary>
 public class NetworkDebugger : NetworkCallbackBase, IDebugService
 {
-    private const string DEBUG_PREFIX = "[NetworkDebugger]";
-    
     [Title("Runtime Data")]
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
@@ -20,16 +18,17 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     private GameConfig _gameConfig;
     
     [Inject] private NetworkRunner _injectedNetworkRunner;
+    [Inject] private DiContainer _container;
     
     private void Awake()
     {
-        Debug.Log($"{DEBUG_PREFIX} - Awake");
+        Log("Awake");
     }
     
     [Inject]
     private void PostInject()
     {
-        Debug.Log($"{DEBUG_PREFIX} - PostInject - NetworkRunner injected: {_injectedNetworkRunner}");
+        Log($"PostInject - NetworkRunner injected: {_injectedNetworkRunner}");
     }
     
     private void OnDestroy()
@@ -37,14 +36,14 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
         if (_networkRunner != null)
         {
             _networkRunner.RemoveCallbacks(this);
-            Debug.Log($"{DEBUG_PREFIX} - Callbacks removed from NetworkRunner");
+            Log("Callbacks removed from NetworkRunner");
         }
     }
     public void LogNetworkState()
     {
         if (_networkRunner != null)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Network State: Runner={_networkRunner}, IsServer={_networkRunner.IsServer}, IsClient={_networkRunner.IsClient}, LocalPlayer={_networkRunner.LocalPlayer}, ActivePlayers={_networkRunner.ActivePlayers.Count()}");
+            Log($"Network State: Runner={_networkRunner}, IsServer={_networkRunner.IsServer}, IsClient={_networkRunner.IsClient}, LocalPlayer={_networkRunner.LocalPlayer}, ActivePlayers={_networkRunner.ActivePlayers.Count()}");
             
             foreach (var player in _networkRunner.ActivePlayers)
             {
@@ -53,7 +52,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
         }
         else
         {
-            Debug.LogWarning($"{DEBUG_PREFIX} - NetworkRunner is null!");
+            LogWarning("NetworkRunner is null!");
         }
     }
     
@@ -61,7 +60,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_networkRunner != null)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Active Player: {player}, IsLocalPlayer: {player == _networkRunner.LocalPlayer}");
+            Log($"Active Player: {player}, IsLocalPlayer: {player == _networkRunner.LocalPlayer}");
         }
     }
     
@@ -69,7 +68,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_networkRunner != null)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Connection Info: IsConnected={_networkRunner.IsRunning}, IsServer={_networkRunner.IsServer}, IsClient={_networkRunner.IsClient}, LocalPlayer={_networkRunner.LocalPlayer}");
+            Log($"Connection Info: IsConnected={_networkRunner.IsRunning}, IsServer={_networkRunner.IsServer}, IsClient={_networkRunner.IsClient}, LocalPlayer={_networkRunner.LocalPlayer}");
         }
     }
     
@@ -82,7 +81,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_gameConfig?.EnableDebugLogs == true)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Player joined: {player}, IsLocalPlayer: {player == runner.LocalPlayer}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
+            Log($"Player joined: {player}, IsLocalPlayer: {player == runner.LocalPlayer}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
         }
     }
     
@@ -90,7 +89,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_gameConfig?.EnableDebugLogs == true)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Player left: {player}, IsLocalPlayer: {player == runner.LocalPlayer}, ActivePlayers: {runner.ActivePlayers.Count()}");
+            Log($"Player left: {player}, IsLocalPlayer: {player == runner.LocalPlayer}, ActivePlayers: {runner.ActivePlayers.Count()}");
         }
     }
     
@@ -98,20 +97,20 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_gameConfig?.EnableDebugLogs == true)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Connected to server. Runner: {runner}, IsServer: {runner.IsServer}, IsClient: {runner.IsClient}, LocalPlayer: {runner.LocalPlayer}");
+            Log($"Connected to server. Runner: {runner}, IsServer: {runner.IsServer}, IsClient: {runner.IsClient}, LocalPlayer: {runner.LocalPlayer}");
         }
     }
     
     public override void OnConnectFailed(NetworkRunner runner, NetAddress remoteAddress, NetConnectFailedReason reason)
     {
-        Debug.LogError($"{DEBUG_PREFIX} - Connection failed: {reason}, RemoteAddress: {remoteAddress}");
+        LogError($"Connection failed: {reason}, RemoteAddress: {remoteAddress}");
     }
     
     public override void OnDisconnectedFromServer(NetworkRunner runner)
     {
         if (_gameConfig?.EnableDebugLogs == true)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Disconnected from server. Runner: {runner}");
+            Log($"Disconnected from server. Runner: {runner}");
         }
     }
     
@@ -119,7 +118,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_gameConfig?.EnableDebugLogs == true)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Shutdown: {shutdownReason}, Runner: {runner}");
+            Log($"Shutdown: {shutdownReason}, Runner: {runner}");
         }
     }
     
@@ -127,7 +126,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_gameConfig?.EnableDebugLogs == true)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Scene load start: {runner}");
+            Log($"Scene load start: {runner}");
         }
     }
     
@@ -135,33 +134,41 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         if (_gameConfig?.EnableDebugLogs == true)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Scene load done: {runner}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
+            Log($"Scene load done: {runner}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
         }
     }
     
     private void Start()
     {
-        Debug.Log($"{DEBUG_PREFIX} - Start");
+        Log("Start");
         
         _networkRunner = _injectedNetworkRunner;
         _gameConfig = ConfigManager.GameConfig;
         
-        Debug.Log($"{DEBUG_PREFIX} - Dependencies initialized: NetworkRunner={_networkRunner}, GameConfig={_gameConfig}");
+        Log($"Dependencies initialized: NetworkRunner={_networkRunner}, GameConfig={_gameConfig}");
+        
+        // Попытка получить NetworkRunner из контейнера, если он не инжектирован
+        if (_networkRunner == null && _container != null)
+        {
+            LogWarning("NetworkRunner is null, attempting to resolve from container");
+            _networkRunner = _container.Resolve<NetworkRunner>();
+            Log($"NetworkRunner resolved from container: {_networkRunner != null}");
+        }
         
         if (_gameConfig != null && !_gameConfig.EnableNetworkDebugger)
         {
-            Debug.Log($"{DEBUG_PREFIX} - Network debugger disabled in config");
+            Log("Network debugger disabled in config");
             return;
         }
         
         if (_networkRunner != null)
         {
             _networkRunner.AddCallbacks(this);
-            Debug.Log($"{DEBUG_PREFIX} - NetworkRunner callbacks added: {_networkRunner}");
+            Log($"NetworkRunner callbacks added: {_networkRunner}");
         }
         else
         {
-            Debug.LogError($"{DEBUG_PREFIX} - NetworkRunner is null!");
+            LogError("NetworkRunner is null!");
         }
     }
 } 

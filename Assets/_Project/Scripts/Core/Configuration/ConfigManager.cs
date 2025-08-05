@@ -8,11 +8,10 @@ using Core.Base;
 /// </summary>
 public class ConfigManager : LoggableMonoBehaviour
 {
-    [Title("Configuration")]
     [FoldoutGroup("Game Config")]
     [InfoBox("Основная конфигурация игры")]
     [SerializeField] private GameConfig _gameConfig;
-    
+    [FoldoutGroup("Game Config")]
     [ShowInInspector, ReadOnly]
     private static ConfigManager _instance;
     
