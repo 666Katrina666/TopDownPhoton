@@ -1,0 +1,5 @@
+---
+description: Добавляй `#region` для групп
+globs: "*.cs"
+alwaysApply: false
+---

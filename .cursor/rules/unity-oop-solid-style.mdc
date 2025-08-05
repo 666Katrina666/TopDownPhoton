@@ -1,0 +1,6 @@
+---
+description: |
+  Строгое соблюдение ООП, SOLID и Unity Style Guide (https://github.com/furic/Unity-Style-Guide).
+globs: "*.cs"
+alwaysApply: false
+---

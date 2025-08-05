@@ -33,6 +33,7 @@ MonoBehaviour:
     - Assembly-CSharp
     - Assembly-CSharp-firstpass
     - DamageNumbersPro
+    - Fusion.Addons.Physics
     - Fusion.Menu
     - Fusion.Unity
     - Lofelt.NiceVibrations
@@ -56,6 +57,9 @@ MonoBehaviour:
     - SonityExample
     - TemplateSonity
     - unity-websocket-sharp
+    - Zenject
+    - Zenject-IntegrationTests
+    - Zenject-IntegrationTests-Editor
     showAdvancedSettings: 0
   addMgrToSceneAutomatically: 0
   autoUpdateReferences: 1

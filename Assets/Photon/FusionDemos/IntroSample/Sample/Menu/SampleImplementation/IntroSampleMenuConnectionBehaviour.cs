@@ -134,7 +134,9 @@ namespace FusionDemo {
       if (peerMode is NetworkProjectConfig.PeerModes.Multiple) return;
       
       for (int i = SceneManager.sceneCount-1; i > 0; i--) {
+#pragma warning disable CS4014
         SceneManager.UnloadSceneAsync(SceneManager.GetSceneAt(i));
+#pragma warning restore CS4014
       }
     }
     
