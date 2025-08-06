@@ -18,6 +18,7 @@ public class PlayerSpawner : NetworkCallbackBase
     private NetworkRunner _networkRunner;
     
     private GameConfig _gameConfig;
+    private bool _isInitialized = false;
     
     private void Awake()
     {
@@ -34,9 +35,52 @@ public class PlayerSpawner : NetworkCallbackBase
         }
     }
     
+    private void OnEnable()
+    {
+        Log("[PlayerSpawner] [EventBus] - Подписываемся на NetworkReadyEvent");
+        EventBus.Subscribe<NetworkReadyEvent>(OnNetworkReady);
+        
+        // Дополнительная проверка на случай, если событие уже прошло
+        if (_isInitialized && _networkRunner != null && _networkRunner.IsRunning && _networkRunner.IsServer)
+        {
+            Log("[PlayerSpawner] [EventBus] - Дополнительная проверка: NetworkRunner готов, спавним игроков");
+            SpawnExistingPlayers();
+        }
+    }
+    
+    private void OnDisable()
+    {
+        Log("[PlayerSpawner] [EventBus] - Отписываемся от NetworkReadyEvent");
+        EventBus.Unsubscribe<NetworkReadyEvent>(OnNetworkReady);
+    }
+    
     private void OnDestroy()
     {
         Log($"[PlayerSpawner] [Уничтожение] - OnDestroy вызван для объекта {gameObject.name} (ID: {GetInstanceID()})");
+    }
+    
+    /// <summary>
+    /// Обработчик события готовности сети
+    /// </summary>
+    private void OnNetworkReady(NetworkReadyEvent evt)
+    {
+        Log($"[PlayerSpawner] [EventBus] - Получено событие NetworkReadyEvent, IsServer={evt.IsServer}");
+        
+        if (!_isInitialized)
+        {
+            LogWarning("[PlayerSpawner] [EventBus] - PlayerSpawner еще не инициализирован, пропускаем событие");
+            return;
+        }
+        
+        if (evt.IsServer)
+        {
+            Log("[PlayerSpawner] [EventBus] - Это сервер, спавним существующих игроков");
+            SpawnExistingPlayers();
+        }
+        else
+        {
+            Log("[PlayerSpawner] [EventBus] - Это не сервер, пропускаем спавн существующих игроков");
+        }
     }
     
     /// <summary>
@@ -58,7 +102,21 @@ public class PlayerSpawner : NetworkCallbackBase
             return;
         }
         
+        // Проверяем состояние сети
+        if (!_networkRunner.IsRunning)
+        {
+            LogError("[PlayerSpawner] [Спавн существующих игроков] - NetworkRunner не запущен!");
+            return;
+        }
+        
+        if (!_networkRunner.IsServer)
+        {
+            LogWarning("[PlayerSpawner] [Спавн существующих игроков] - Попытка спавна на клиенте, пропускаем");
+            return;
+        }
+        
         Log($"[PlayerSpawner] [Спавн существующих игроков] - Активных игроков: {_networkRunner.ActivePlayers.Count()}");
+        Log($"[PlayerSpawner] [Спавн существующих игроков] - Список игроков: {string.Join(", ", _networkRunner.ActivePlayers)}");
         
         foreach (var player in _networkRunner.ActivePlayers)
         {
@@ -93,10 +151,29 @@ public class PlayerSpawner : NetworkCallbackBase
             return;
         }
         
-        float spawnOffsetX = _gameConfig?.SpawnOffsetX ?? 2f;
+        // Проверяем состояние сети
+        if (runner == null)
+        {
+            LogError("[PlayerSpawner] [Спавн игрока] - NetworkRunner null!");
+            return;
+        }
+        
+        if (!runner.IsRunning)
+        {
+            LogError("[PlayerSpawner] [Спавн игрока] - NetworkRunner не запущен!");
+            return;
+        }
+        
+        if (!runner.IsServer)
+        {
+            LogWarning("[PlayerSpawner] [Спавн игрока] - Попытка спавна на клиенте, пропускаем");
+            return;
+        }
+        
+        float spawnOffsetX = _gameConfig?.SpawnOffsetX ?? 1f;
         float spawnHeight = _gameConfig?.SpawnHeight ?? 1f;
         
-        Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount) * spawnOffsetX, spawnHeight, 0);
+        Vector3 spawnPosition = new Vector3((player.RawEncoded % runner.Config.Simulation.PlayerCount - 1) * spawnOffsetX, spawnHeight, 0);
         Log($"[PlayerSpawner] [Спавн игрока] - Позиция спавна: {spawnPosition}, offsetX={spawnOffsetX}, height={spawnHeight}");
         
         NetworkObject networkPlayerObject = _playerFactory.CreatePlayer(player, spawnPosition);
@@ -147,6 +224,7 @@ public class PlayerSpawner : NetworkCallbackBase
         
         _playerFactory = playerFactory;
         _networkRunner = networkRunner;
+        _isInitialized = true;
         
         Log($"[PlayerSpawner] [Zenject] - PlayerFactory: {(_playerFactory != null ? "инжектирован" : "null")}");
         Log($"[PlayerSpawner] [Zenject] - NetworkRunner: {(_networkRunner != null ? "инжектирован" : "null")}");
@@ -156,14 +234,15 @@ public class PlayerSpawner : NetworkCallbackBase
             Log("[PlayerSpawner] [Zenject] - Добавляем PlayerSpawner как callback к NetworkRunner");
             _networkRunner.AddCallbacks(this);
             
-            if (_networkRunner.IsServer)
+            // Проверяем, не было ли уже сгенерировано событие NetworkReadyEvent
+            if (_networkRunner.IsRunning && _networkRunner.IsServer)
             {
-                Log("[PlayerSpawner] [Zenject] - Это сервер, спавним существующих игроков");
+                Log("[PlayerSpawner] [Zenject] - NetworkRunner уже запущен и это сервер, спавним игроков немедленно");
                 SpawnExistingPlayers();
             }
             else
             {
-                Log("[PlayerSpawner] [Zenject] - Это не сервер, пропускаем спавн существующих игроков");
+                Log("[PlayerSpawner] [Zenject] - Ожидаем событие NetworkReadyEvent для спавна игроков");
             }
         }
         else

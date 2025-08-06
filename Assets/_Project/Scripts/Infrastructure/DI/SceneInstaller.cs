@@ -59,8 +59,6 @@ public class SceneInstaller : MonoInstaller
         
         InstallSceneComponents();
         
-        InstallFactories();
-        
         Log("Scene installation completed successfully");
     }
     
@@ -88,11 +86,6 @@ public class SceneInstaller : MonoInstaller
         Log("NetworkConfigurationChecker bound");
         
         Log("Scene components installed");
-    }
-    
-    private void InstallFactories()
-    {
-        Log("Factories installed");
     }
     
     public override void Start()

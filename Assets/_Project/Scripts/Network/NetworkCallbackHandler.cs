@@ -144,5 +144,9 @@ public class NetworkCallbackHandler : NetworkCallbackBase
         Log($"Scene load done. Runner: {runner}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
         
         EventBus.RaiseEvent(new SceneLoadDoneEvent());
+        
+        // Генерируем событие готовности сети для координации спавна игроков
+        Log($"[NetworkCallbackHandler] [EventBus] - Генерируем NetworkReadyEvent, IsServer={runner.IsServer}");
+        EventBus.RaiseEvent(new NetworkReadyEvent(runner, runner.IsServer));
     }
 } 

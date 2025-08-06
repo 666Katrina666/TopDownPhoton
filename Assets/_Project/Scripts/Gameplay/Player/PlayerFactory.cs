@@ -47,24 +47,41 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
         }
         
         Log($"[PlayerFactory] [Создание игрока] - Спавним через NetworkRunner: {_networkRunner.name}");
-        NetworkObject networkPlayerObject = _networkRunner.Spawn(_playerPrefab, position, Quaternion.identity, playerRef);
         
-        if (networkPlayerObject != null)
+        try
         {
-            _spawnedPlayers.Add(playerRef, networkPlayerObject);
-            Log($"[PlayerFactory] [Создание игрока] - Игрок {playerRef} успешно создан: {networkPlayerObject.name}");
+            Log($"[PlayerFactory] [Создание игрока] - Параметры спавна: prefab={(_playerPrefab.IsValid ? "назначен" : "не назначен")}, position={position}, playerRef={playerRef}");
+            Log($"[PlayerFactory] [Создание игрока] - NetworkRunner: {_networkRunner.name}, IsRunning={_networkRunner.IsRunning}, IsServer={_networkRunner.IsServer}");
             
-            // Отправляем событие о создании игрока
-            EventBus.RaiseEvent(new PlayerSpawnedEvent(playerRef, networkPlayerObject));
-            Log($"[PlayerFactory] [Создание игрока] - Событие PlayerSpawnedEvent отправлено");
+            NetworkObject networkPlayerObject = _networkRunner.Spawn(_playerPrefab, position, Quaternion.identity, playerRef);
+            
+            if (networkPlayerObject != null)
+            {
+                _spawnedPlayers.Add(playerRef, networkPlayerObject);
+                Log($"[PlayerFactory] [Создание игрока] - Игрок {playerRef} успешно создан: {networkPlayerObject.name}");
+                
+                // Проверяем компоненты на созданном объекте
+                var playerMovement = networkPlayerObject.GetComponent<PlayerMovement>();
+                Log($"[PlayerFactory] [Создание игрока] - PlayerMovement компонент: {(playerMovement != null ? "найден" : "не найден")}");
+                
+                // Отправляем событие о создании игрока
+                EventBus.RaiseEvent(new PlayerSpawnedEvent(playerRef, networkPlayerObject));
+                Log($"[PlayerFactory] [Создание игрока] - Событие PlayerSpawnedEvent отправлено");
+            }
+            else
+            {
+                LogError($"[PlayerFactory] [Создание игрока] - NetworkRunner.Spawn вернул null для игрока {playerRef}!");
+                LogError($"[PlayerFactory] [Создание игрока] - Параметры: prefab={(_playerPrefab.IsValid ? "назначен" : "не назначен")}, position={position}, playerRef={playerRef}");
+            }
         }
-        else
+        catch (System.Exception ex)
         {
-            LogError($"[PlayerFactory] [Создание игрока] - Не удалось создать игрока {playerRef}!");
+            LogError($"[PlayerFactory] [Создание игрока] - Исключение при спавне игрока {playerRef}: {ex.Message}");
+            LogError($"[PlayerFactory] [Создание игрока] - Stack trace: {ex.StackTrace}");
         }
         
         Log($"[PlayerFactory] [Создание игрока] - Завершено, заспавненных игроков: {_spawnedPlayers.Count}");
-        return networkPlayerObject;
+        return _spawnedPlayers.TryGetValue(playerRef, out var result) ? result : null;
     }
     
     public void DestroyPlayer(NetworkObject playerObject)

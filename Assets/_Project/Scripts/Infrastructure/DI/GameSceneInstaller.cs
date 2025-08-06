@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using Sirenix.OdinInspector;
 using Fusion;
+using System.Collections;
 
 /// <summary>
 /// Установщик для игровой сцены
@@ -9,6 +10,12 @@ using Fusion;
 /// </summary>
 public class GameSceneInstaller : MonoInstaller
 {    
+    [FoldoutGroup("Prefabs")]
+    [InfoBox("Префабы для игровых компонентов")]
+    [SerializeField] private GameObject playerFactoryPrefab;
+    [FoldoutGroup("Prefabs")]
+    [SerializeField] private GameObject playerSpawnerPrefab;
+    
     [FoldoutGroup("Debug Settings")]
     [InfoBox("Настройки отладки")]
     [SerializeField] private bool enableLogging = true;
@@ -53,29 +60,78 @@ public class GameSceneInstaller : MonoInstaller
     {
         Log("Starting GameScene installation...");
         
-        // Сначала устанавливаем базовые сценовые компоненты
-        base.InstallBindings();
-        
-        // Затем добавляем игровые компоненты
-        InstallPlayerComponents();
+        // Устанавливаем биндинги для игровых компонентов
+        InstallPlayerBindings();
         
         Log("GameScene installation completed successfully");
+        
+        // Запускаем создание объектов после завершения установки
+        StartCoroutine(CreatePlayerComponentsAfterInstall());
     }
     
-    private void InstallPlayerComponents()
+    /// <summary>
+    /// Устанавливает биндинги для игровых компонентов
+    /// </summary>
+    private void InstallPlayerBindings()
     {
-        Log("Installing player components...");
+        Log("Installing player bindings...");
         
-        // Создаем PlayerFactory динамически
-        Container.Bind<PlayerFactory>().FromNewComponentOnNewGameObject().AsSingle();
-        Log("PlayerFactory bound as singleton");
+        // Проверяем наличие префабов
+        if (playerFactoryPrefab == null)
+        {
+            LogError("PlayerFactory prefab не назначен!");
+            return;
+        }
         
-        // Привязываем интерфейс к реализации
+        if (playerSpawnerPrefab == null)
+        {
+            LogError("PlayerSpawner prefab не назначен!");
+            return;
+        }
+        
+        // Биндинги будут установлены после создания объектов
+        Log("Player bindings installation completed");
+    }
+    
+    /// <summary>
+    /// Создает игровые компоненты после завершения установки всех биндингов
+    /// </summary>
+    private IEnumerator CreatePlayerComponentsAfterInstall()
+    {
+        // Ждем один кадр, чтобы убедиться, что все установки завершены
+        yield return null;
+        
+        Log("Creating player components after installation...");
+        
+        // Создаем PlayerFactory из префаба
+        var playerFactoryInstance = Container.InstantiatePrefab(playerFactoryPrefab);
+        var playerFactory = playerFactoryInstance.GetComponent<PlayerFactory>();
+        
+        if (playerFactory == null)
+        {
+            LogError("PlayerFactory компонент не найден в префабе!");
+            yield break;
+        }
+        
+        // Привязываем созданный экземпляр к биндингу
+        Container.Bind<PlayerFactory>().FromInstance(playerFactory).AsSingle();
         Container.Bind<IPlayerFactory>().To<PlayerFactory>().FromResolve();
-        Log("IPlayerFactory bound to PlayerFactory");
+        Log($"PlayerFactory created and bound as singleton - GameObject: {playerFactoryInstance.name} (ID: {playerFactoryInstance.GetInstanceID()})");
         
-        // Создаем PlayerSpawner динамически
-        Container.Bind<PlayerSpawner>().FromNewComponentOnNewGameObject().AsSingle();
-        Log("PlayerSpawner bound as singleton");
+        // Создаем PlayerSpawner из префаба
+        var playerSpawnerInstance = Container.InstantiatePrefab(playerSpawnerPrefab);
+        var playerSpawner = playerSpawnerInstance.GetComponent<PlayerSpawner>();
+        
+        if (playerSpawner == null)
+        {
+            LogError("PlayerSpawner компонент не найден в префабе!");
+            yield break;
+        }
+        
+        // Привязываем созданный экземпляр к биндингу
+        Container.Bind<PlayerSpawner>().FromInstance(playerSpawner).AsSingle();
+        Log($"PlayerSpawner created and bound as singleton - GameObject: {playerSpawnerInstance.name} (ID: {playerSpawnerInstance.GetInstanceID()})");
+        
+        Log("Player components creation completed successfully");
     }
 } 

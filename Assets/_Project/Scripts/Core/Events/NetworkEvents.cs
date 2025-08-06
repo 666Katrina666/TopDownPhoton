@@ -115,6 +115,21 @@ public struct NetworkConnectedEvent
 }
 
 /// <summary>
+/// Событие готовности сети к спавну объектов
+/// </summary>
+public struct NetworkReadyEvent
+{
+    public NetworkRunner Runner;
+    public bool IsServer;
+    
+    public NetworkReadyEvent(NetworkRunner runner, bool isServer)
+    {
+        Runner = runner;
+        IsServer = isServer;
+    }
+}
+
+/// <summary>
 /// Состояния подключения
 /// </summary>
 public enum ConnectionState

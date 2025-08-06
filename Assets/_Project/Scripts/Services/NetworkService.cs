@@ -68,6 +68,21 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
     {
         Log($"NetworkService - LoadScene called with: {sceneName}");
         
+        // Проверяем, что сцена не пустая
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            LogError("NetworkService - Scene name is null or empty!");
+            return;
+        }
+        
+        // Проверяем, не загружена ли уже эта сцена
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == sceneName)
+        {
+            Log($"NetworkService - Scene '{sceneName}' is already loaded, skipping load");
+            return;
+        }
+        
         // Проверяем, что NetworkRunner существует, работает и не находится в процессе завершения
         if (_networkRunner != null && _networkRunner.IsRunning && !_networkRunner.IsShutdown)
         {

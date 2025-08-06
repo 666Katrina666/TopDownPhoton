@@ -467,8 +467,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scriptableObjectInstallers: []
   _monoInstallers:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 2724782515145634474}
   _installerPrefabs: []
   _autoRun: 1
   OnPreInstall:
@@ -690,11 +689,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6871402911899220120, guid: fdc9d629581e93546ac2d65ba20668e6, type: 3}
+      propertyPath: playerFactoryPrefab
+      value: 
+      objectReference: {fileID: 1000000000000000, guid: 492f99899399ffe4b9ffb500d6555520, type: 3}
+    - target: {fileID: 6871402911899220120, guid: fdc9d629581e93546ac2d65ba20668e6, type: 3}
+      propertyPath: playerSpawnerPrefab
+      value: 
+      objectReference: {fileID: 2000000000000000, guid: 3fe02a9d4583da14886684604dd65c57, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fdc9d629581e93546ac2d65ba20668e6, type: 3}
+--- !u!114 &2724782515145634474 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6871402911899220120, guid: fdc9d629581e93546ac2d65ba20668e6, type: 3}
+  m_PrefabInstance: {fileID: 2724782515145634473}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d711f0561c9ff84e82243994d658d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
