@@ -13,19 +13,13 @@ public class SceneService : LoggableMonoBehaviour, ISceneService
     
     public string CurrentSceneName => SceneManager.GetActiveScene().name;
     
-    private void Awake()
-    {
-        Log($"Awake. Current scene: {CurrentSceneName}");
-    }
     public void LoadScene(string sceneName)
     {
         if (IsSceneLoaded(sceneName))
         {
-            Log($"Already in scene {sceneName}, skipping load");
             return;
         }
         
-        Log($"Loading scene: {sceneName}");
         SceneManager.LoadScene(sceneName);
     }
     
@@ -33,19 +27,15 @@ public class SceneService : LoggableMonoBehaviour, ISceneService
     {
         if (IsSceneLoaded(sceneName))
         {
-            Log($"Already in scene {sceneName}, skipping load");
             return;
         }
         
-        Log($"Loading scene async: {sceneName}");
         var operation = SceneManager.LoadSceneAsync(sceneName);
         
         while (!operation.isDone)
         {
             await Task.Yield();
         }
-        
-        Log($"Scene {sceneName} loaded successfully");
     }
     
     public bool IsSceneLoaded(string sceneName)
@@ -55,6 +45,5 @@ public class SceneService : LoggableMonoBehaviour, ISceneService
     
     public void SetCurrentScene(string sceneName)
     {
-        Log($"Setting current scene to: {sceneName}");
     }
 } 

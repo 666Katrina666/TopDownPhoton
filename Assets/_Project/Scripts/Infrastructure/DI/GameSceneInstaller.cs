@@ -15,6 +15,8 @@ public class GameSceneInstaller : MonoInstaller
     [SerializeField] private GameObject playerFactoryPrefab;
     [FoldoutGroup("Prefabs")]
     [SerializeField] private GameObject playerSpawnerPrefab;
+    [FoldoutGroup("Prefabs")]
+    [SerializeField] private GameObject networkInputHandlerPrefab;
     
     [FoldoutGroup("Debug Settings")]
     [InfoBox("Настройки отладки")]
@@ -89,6 +91,12 @@ public class GameSceneInstaller : MonoInstaller
             return;
         }
         
+        if (networkInputHandlerPrefab == null)
+        {
+            LogError("NetworkInputHandler prefab не назначен!");
+            return;
+        }
+        
         // Биндинги будут установлены после создания объектов
         Log("Player bindings installation completed");
     }
@@ -131,6 +139,20 @@ public class GameSceneInstaller : MonoInstaller
         // Привязываем созданный экземпляр к биндингу
         Container.Bind<PlayerSpawner>().FromInstance(playerSpawner).AsSingle();
         Log($"PlayerSpawner created and bound as singleton - GameObject: {playerSpawnerInstance.name} (ID: {playerSpawnerInstance.GetInstanceID()})");
+        
+        // Создаем NetworkInputHandler из префаба
+        var networkInputHandlerInstance = Container.InstantiatePrefab(networkInputHandlerPrefab);
+        var networkInputHandler = networkInputHandlerInstance.GetComponent<NetworkInputHandler>();
+        
+        if (networkInputHandler == null)
+        {
+            LogError("NetworkInputHandler компонент не найден в префабе!");
+            yield break;
+        }
+        
+        // Привязываем созданный экземпляр к биндингу
+        Container.Bind<NetworkInputHandler>().FromInstance(networkInputHandler).AsSingle();
+        Log($"NetworkInputHandler created and bound as singleton - GameObject: {networkInputHandlerInstance.name} (ID: {networkInputHandlerInstance.GetInstanceID()})");
         
         Log("Player components creation completed successfully");
     }

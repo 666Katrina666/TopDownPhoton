@@ -41,22 +41,14 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
     public ConnectionState CurrentState => _currentState;
     public string CurrentRoomName => _currentRoomName;
     
-    private void Awake()
-    {
-        Log("Awake");
-    }
-    
     private void OnDestroy()
     {
-        Log("OnDestroy");
         UnsubscribeFromEvents();
         CancelConnectionOperation();
     }
     
     private void Start()
     {
-        Log("Start");
-        
         _networkService = _injectedNetworkService;
         _networkRunner = _injectedNetworkRunner;
         _sceneService = _injectedSceneService;
@@ -79,15 +71,14 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
     
     private void OnStartHostRequest(StartHostRequestEvent evt)
     {
-        Log($"Start host request: {evt.RoomName}");
         StartHost(evt.RoomName);
     }
     
     private void OnStartClientRequest(StartClientRequestEvent evt)
     {
-        Log($"Start client request: {evt.RoomName}");
         StartClient(evt.RoomName);
     }
+    
     /// <summary>
     /// Запускает хост
     /// </summary>
@@ -101,8 +92,6 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
         
         _currentRoomName = roomName;
         SetConnectionState(ConnectionState.Connecting, "Starting host...");
-        
-        Log($"Starting host with room: {roomName}");
         
         try
         {
@@ -130,8 +119,6 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
         _currentRoomName = roomName;
         SetConnectionState(ConnectionState.Connecting, "Connecting to server...");
         
-        Log($"Starting client with room: {roomName}");
-        
         try
         {
             await StartClientAsync(roomName);
@@ -149,8 +136,6 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
     /// </summary>
     public async void Disconnect()
     {
-        Log("Disconnecting");
-        
         CancelConnectionOperation();
         
         if (_networkRunner != null && _networkRunner.IsRunning)
@@ -185,7 +170,6 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
             throw new System.Exception($"Failed to start host: {result.ShutdownReason}");
         }
         
-        Log("Host started successfully");
         SetConnectionState(ConnectionState.Connected, "Host started");
     }
     
@@ -207,7 +191,6 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
             throw new System.Exception($"Failed to connect as client: {result.ShutdownReason}");
         }
         
-        Log("Client connected successfully");
         SetConnectionState(ConnectionState.Connected, "Connected to server");
     }
     
@@ -223,8 +206,6 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
             var runnerObject = new GameObject("NetworkRunner");
             _networkRunner = runnerObject.AddComponent<NetworkRunner>();
             DontDestroyOnLoad(runnerObject);
-            
-            Log($"Created new NetworkRunner: {_networkRunner}");
         }
     }
     
@@ -235,20 +216,17 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
         {
             var defaultSceneManager = _networkRunner.gameObject.AddComponent<NetworkSceneManagerDefault>();
             defaultSceneManager.IsSceneTakeOverEnabled = false;
-            Log("Added NetworkSceneManagerDefault");
         }
         
         var objectProvider = _networkRunner.GetComponent<INetworkObjectProvider>();
         if (objectProvider == null)
         {
             _networkRunner.gameObject.AddComponent<NetworkObjectProviderDefault>();
-            Log("Added NetworkObjectProviderDefault");
         }
         
         if (_callbackHandler != null)
         {
             _networkRunner.AddCallbacks(_callbackHandler);
-            Log("Added NetworkCallbackHandler to NetworkRunner");
         }
     }
     
@@ -279,8 +257,6 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
     
     private void OnGameStarted(NetworkRunner runner)
     {
-        Log($"Game started. Runner: {runner}, IsServer: {runner.IsServer}, IsClient: {runner.IsClient}");
-        
         if (_sceneService != null)
         {
             _sceneService.LoadScene(_defaultSceneName);
@@ -302,7 +278,5 @@ public class NetworkConnectionManager : LoggableMonoBehaviour
         _currentState = state;
         
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(state, message));
-        
-        Log($"State changed to: {state} - {message}");
     }
 } 

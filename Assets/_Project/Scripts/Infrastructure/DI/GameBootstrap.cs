@@ -78,16 +78,30 @@ public class GameBootstrap : LoggableMonoBehaviour
         Log($"Dependencies initialized. GameConfig: {_gameConfig?.name}");
         
         // Принудительно инициализируем сервисы, если они еще не созданы
-        if (_networkService == null)
+        if (_networkService == null && _container != null)
         {
             LogWarning("NetworkService is null, attempting to resolve from container");
-            _networkService = _container.Resolve<INetworkService>();
+            try
+            {
+                _networkService = _container.Resolve<INetworkService>();
+            }
+            catch (System.Exception ex)
+            {
+                LogError($"Failed to resolve NetworkService: {ex.Message}");
+            }
         }
         
-        if (_sceneService == null)
+        if (_sceneService == null && _container != null)
         {
             LogWarning("SceneService is null, attempting to resolve from container");
-            _sceneService = _container.Resolve<ISceneService>();
+            try
+            {
+                _sceneService = _container.Resolve<ISceneService>();
+            }
+            catch (System.Exception ex)
+            {
+                LogError($"Failed to resolve SceneService: {ex.Message}");
+            }
         }
         
         SubscribeToEvents();

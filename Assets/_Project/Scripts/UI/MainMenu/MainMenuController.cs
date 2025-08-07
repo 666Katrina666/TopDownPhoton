@@ -7,22 +7,11 @@ using Core.Base;
 /// </summary>
 public class MainMenuController : LoggableMonoBehaviour
 {
-    
-    private void Awake()
-    {
-        Log("Awake");
-    }
-    
-    private void OnDestroy()
-    {
-        Log("OnDestroy");
-    }
     /// <summary>
     /// Запускает хост
     /// </summary>
     public void StartHost()
     {
-        Log("Start host requested");
         EventBus.RaiseEvent(new StartHostRequestEvent());
     }
     
@@ -31,7 +20,6 @@ public class MainMenuController : LoggableMonoBehaviour
     /// </summary>
     public void StartClient()
     {
-        Log("Start client requested");
         EventBus.RaiseEvent(new StartClientRequestEvent());
     }
     
@@ -40,7 +28,6 @@ public class MainMenuController : LoggableMonoBehaviour
     /// </summary>
     public void StartHostWithRoom(string roomName)
     {
-        Log($"Start host with room requested: {roomName}");
         EventBus.RaiseEvent(new StartHostRequestEvent(roomName));
     }
     
@@ -49,7 +36,6 @@ public class MainMenuController : LoggableMonoBehaviour
     /// </summary>
     public void StartClientWithRoom(string roomName)
     {
-        Log($"Start client with room requested: {roomName}");
         EventBus.RaiseEvent(new StartClientRequestEvent(roomName));
     }
 } 

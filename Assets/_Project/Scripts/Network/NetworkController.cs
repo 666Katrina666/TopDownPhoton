@@ -30,27 +30,19 @@ public class NetworkController : LoggableMonoBehaviour
     
     private void Awake()
     {
-        Log("Awake");
-        
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
     
     [Inject]
     private void Construct(INetworkService networkService, ISceneService sceneService, DiContainer container)
     {
-        Log("NetworkController - Construct called");
         _networkService = networkService;
         _sceneService = sceneService;
         _container = container;
-        
-        Log($"NetworkService injected: {_networkService != null}");
-        Log($"SceneService injected: {_sceneService != null}");
     }
     
     private void OnDestroy()
     {
-        Log("OnDestroy");
-        
         UnsubscribeFromEvents();
         
         SceneManager.sceneLoaded -= OnSceneLoaded;
@@ -58,8 +50,6 @@ public class NetworkController : LoggableMonoBehaviour
     
     private void Start()
     {
-        Log("NetworkController Start");
-        
         // Проверяем, что зависимости инжектированы
         if (_networkService == null || _sceneService == null)
         {
@@ -69,13 +59,11 @@ public class NetworkController : LoggableMonoBehaviour
             if (_networkService == null && _container != null)
             {
                 _networkService = _container.Resolve<INetworkService>();
-                Log($"NetworkService resolved from container: {_networkService != null}");
             }
             
             if (_sceneService == null && _container != null)
             {
                 _sceneService = _container.Resolve<ISceneService>();
-                Log($"SceneService resolved from container: {_sceneService != null}");
             }
             
             if (_networkService == null || _sceneService == null)
@@ -86,7 +74,6 @@ public class NetworkController : LoggableMonoBehaviour
         }
         
         SubscribeToEvents();
-        Log("NetworkController subscribed to events");
     }
     
     private void SubscribeToEvents()
@@ -103,17 +90,12 @@ public class NetworkController : LoggableMonoBehaviour
     
     private void OnGameStarted(GameStartedEvent evt)
     {
-        Log($"NetworkController - Game started: {evt.GameSceneName}");
-        
         string sceneName = string.IsNullOrEmpty(evt.GameSceneName) ? _defaultGameScene : evt.GameSceneName;
-        Log($"NetworkController - Loading scene: {sceneName}");
         LoadScene(sceneName);
     }
     
     private void OnLeaveLobby(LeaveLobbyEvent evt)
     {
-        Log("Leaving lobby");
-        
         if (_networkService != null)
         {
             _networkService.Disconnect();
@@ -125,13 +107,12 @@ public class NetworkController : LoggableMonoBehaviour
         
         LoadScene(_defaultMainMenuScene);
     }
+    
     /// <summary>
     /// Загружает сцену через NetworkRunner
     /// </summary>
     public void LoadScene(string sceneName)
     {
-        Log($"NetworkController - LoadScene called with: {sceneName}");
-        
         if (string.IsNullOrEmpty(sceneName))
         {
             LogError("NetworkController - Scene name is null or empty!");
@@ -151,9 +132,7 @@ public class NetworkController : LoggableMonoBehaviour
         }
         
         string currentScene = _sceneService.CurrentSceneName ?? SceneManager.GetActiveScene().name;
-        Log($"NetworkController - Current scene: {currentScene}");
         
-        Log($"NetworkController - Calling NetworkService.LoadScene: {sceneName}");
         _networkService.LoadScene(sceneName);
         
         EventBus.RaiseEvent(new SceneChangedEvent(currentScene, sceneName));
@@ -164,8 +143,6 @@ public class NetworkController : LoggableMonoBehaviour
     /// </summary>
     public void ConnectToLobby(string roomName = "")
     {
-        Log($"Connecting to lobby: {roomName}");
-        
         if (_networkService != null)
         {
             _networkService.ConnectToLobby(roomName);
@@ -181,8 +158,6 @@ public class NetworkController : LoggableMonoBehaviour
     /// </summary>
     public void StartGame(string gameSceneName = "")
     {
-        Log($"Starting game: {gameSceneName}");
-        
         EventBus.RaiseEvent(new GameStartedEvent(gameSceneName));
     }
     
@@ -191,15 +166,11 @@ public class NetworkController : LoggableMonoBehaviour
     /// </summary>
     public void LeaveLobby()
     {
-        Log("Leaving lobby");
-        
         EventBus.RaiseEvent(new LeaveLobbyEvent());
     }
     
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        Log($"Scene loaded: {scene.name}, mode: {mode}");
-        
         if (_sceneService != null)
         {
             _sceneService.SetCurrentScene(scene.name);

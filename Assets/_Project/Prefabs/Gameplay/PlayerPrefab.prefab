@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6273422671631237076}
   - component: {fileID: 2469589072423001089}
-  - component: {fileID: 6099269231169923814}
-  - component: {fileID: -6193431257183443747}
   - component: {fileID: -9155903781246442683}
+  - component: {fileID: 4996468869798954248}
+  - component: {fileID: 5618826583992888017}
   m_Layer: 0
   m_Name: PlayerPrefab
   m_TagString: Untagged
@@ -53,39 +53,9 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 6099269231169923814}
-  - {fileID: -6193431257183443747}
   - {fileID: -9155903781246442683}
+  - {fileID: 4996468869798954248}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &6099269231169923814
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1762839820380155546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e48bdb460b129f4684d9498cf9d8343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-6193431257183443747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1762839820380155546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 597b4394c0fc0be4e95205956590ebec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _moveSpeed: 10
-  _acceleration: 10
-  _deceleration: 15
-  _NetworkedMoveDirection: {x: 0, y: 0}
-  _NetworkedIsMoving: 0
 --- !u!114 &-9155903781246442683
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,6 +73,47 @@ MonoBehaviour:
   SyncParent: 0
   _autoAOIOverride: 1
   DisableSharedModeInterpolation: 0
+--- !u!114 &4996468869798954248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762839820380155546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0ae786a5a87df28488e116ae4a42280d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogging: 1
+  _moveSpeed: 5
+--- !u!50 &5618826583992888017
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762839820380155546}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2956719255479220261
 GameObject:
   m_ObjectHideFlags: 0

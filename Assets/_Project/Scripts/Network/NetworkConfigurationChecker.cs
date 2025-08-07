@@ -34,18 +34,10 @@ public class NetworkConfigurationChecker : LoggableMonoBehaviour
     
     private void CheckNetworkRunner()
     {
-        if (_networkRunner != null)
-        {
-            Log($"NetworkRunner found: {_networkRunner}, IsServer: {_networkRunner.IsServer}, IsClient: {_networkRunner.IsClient}, IsRunning: {_networkRunner.IsRunning}");
-        }
     }
     
     private void CheckPlayerSpawner()
     {
-        if (_playerSpawner != null)
-        {
-            Log($"PlayerSpawner found: {_playerSpawner}");
-        }
     }
     
     private void CheckPlayerPrefab()

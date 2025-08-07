@@ -85,6 +85,18 @@ public class SceneInstaller : MonoInstaller
         Container.Bind<NetworkConfigurationChecker>().FromComponentInHierarchy().AsSingle();
         Log("NetworkConfigurationChecker bound");
         
+        // Регистрируем NetworkInputHandler только если он есть на сцене
+        var inputHandler = FindFirstObjectByType<NetworkInputHandler>();
+        if (inputHandler != null)
+        {
+            Container.Bind<NetworkInputHandler>().FromInstance(inputHandler).AsSingle();
+            Log("NetworkInputHandler bound");
+        }
+        else
+        {
+            Log("NetworkInputHandler not found on scene, skipping binding");
+        }
+        
         Log("Scene components installed");
     }
     

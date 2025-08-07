@@ -22,8 +22,6 @@ public class LobbyButtonController : LoggableMonoBehaviour
         {
             LogWarning("GameConfig not found!");
         }
-        
-        Log("LobbyButtonController initialized");
     }
     
     /// <summary>
@@ -33,7 +31,6 @@ public class LobbyButtonController : LoggableMonoBehaviour
     {
         string gameSceneName = _gameConfig?.GameSceneName ?? "GameScene";
         EventBus.RaiseEvent(new GameStartedEvent(gameSceneName));
-        Log($"Start game requested: {gameSceneName}");
     }
     
     /// <summary>
@@ -50,7 +47,6 @@ public class LobbyButtonController : LoggableMonoBehaviour
         {
             LogError("NetworkController not found!");
         }
-        Log($"Return to main menu requested: {mainMenuSceneName}");
     }
     
     /// <summary>
@@ -59,7 +55,6 @@ public class LobbyButtonController : LoggableMonoBehaviour
     public void RefreshPlayerList()
     {
         EventBus.RaiseEvent(new RefreshLobbyPlayerListEvent());
-        Log("Refresh player list requested");
     }
     
     /// <summary>
@@ -68,6 +63,5 @@ public class LobbyButtonController : LoggableMonoBehaviour
     public void LeaveLobby()
     {
         EventBus.RaiseEvent(new LeaveLobbyEvent());
-        Log("Leave lobby requested");
     }
 } 

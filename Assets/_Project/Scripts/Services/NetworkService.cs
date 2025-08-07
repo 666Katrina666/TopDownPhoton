@@ -24,23 +24,12 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
     public PlayerRef LocalPlayer => _networkRunner?.LocalPlayer ?? default;
     public string CurrentRoomName => _currentRoomName;
     
-    private void Awake()
-    {
-        Log("Awake");
-    }
-    
-    private void OnDestroy()
-    {
-        Log("OnDestroy");
-    }
     public void Connect()
     {
-        Log("Connect called");
     }
     
     public void ConnectToLobby(string roomName = "")
     {
-        Log($"Connecting to lobby: {roomName}");
         _currentRoomName = roomName;
     }
     
@@ -48,7 +37,6 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
     {
         if (_networkRunner != null)
         {
-            Log("Disconnecting from network");
             _networkRunner.Shutdown();
         }
         _currentRoomName = "";
@@ -58,7 +46,6 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
     {
         if (_networkRunner != null)
         {
-            Log("Shutting down network");
             _networkRunner.Shutdown();
         }
         _currentRoomName = "";
@@ -66,8 +53,6 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
     
     public void LoadScene(string sceneName)
     {
-        Log($"NetworkService - LoadScene called with: {sceneName}");
-        
         // Проверяем, что сцена не пустая
         if (string.IsNullOrEmpty(sceneName))
         {
@@ -79,19 +64,16 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
         string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == sceneName)
         {
-            Log($"NetworkService - Scene '{sceneName}' is already loaded, skipping load");
             return;
         }
         
         // Проверяем, что NetworkRunner существует, работает и не находится в процессе завершения
         if (_networkRunner != null && _networkRunner.IsRunning && !_networkRunner.IsShutdown)
         {
-            Log($"NetworkService - Loading scene via NetworkRunner: {sceneName}");
             _networkRunner.LoadScene(sceneName);
         }
         else
         {
-            Log($"NetworkService - NetworkRunner unavailable (null: {_networkRunner == null}, running: {_networkRunner?.IsRunning}, shutdown: {_networkRunner?.IsShutdown}), loading scene via SceneManager: {sceneName}");
             SceneManager.LoadScene(sceneName);
         }
     }
@@ -100,6 +82,5 @@ public class NetworkService : LoggableMonoBehaviour, INetworkService
     private void Construct(NetworkRunner networkRunner)
     {
         _networkRunner = networkRunner;
-        Log($"NetworkRunner injected: {_networkRunner}");
     }
 } 

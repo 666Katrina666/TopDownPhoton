@@ -29,19 +29,16 @@ public class MainMenuUI : LoggableMonoBehaviour
     
     private void Awake()
     {
-        Log("Awake");
         ValidateUIReferences();
     }
     
     private void OnDestroy()
     {
-        Log("OnDestroy");
         UnsubscribeFromEvents();
     }
     
     private void Start()
     {
-        Log("Start");
         SubscribeToEvents();
         UpdateUI();
     }
@@ -59,8 +56,6 @@ public class MainMenuUI : LoggableMonoBehaviour
     }
     private void OnConnectionStateChanged(ConnectionStateChangedEvent evt)
     {
-        Log($"Connection state changed: {evt.State} - {evt.Message}");
-        
         _currentState = evt.State;
         UpdateUI();
         
@@ -136,8 +131,6 @@ public class MainMenuUI : LoggableMonoBehaviour
         {
             _errorText.gameObject.SetActive(false);
         }
-        
-        Log($"UI updated. State: {_currentState}, Connecting: {isConnecting}");
     }
     /// <summary>
     /// Очищает сообщение об ошибке

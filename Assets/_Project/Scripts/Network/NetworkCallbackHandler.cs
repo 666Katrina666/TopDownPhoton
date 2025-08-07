@@ -19,29 +19,22 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private NetworkConnectionManager _connectionManager;
+    [FoldoutGroup("Runtime Data", false)]
+    [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
+    private NetworkInputHandler _inputHandler;
     
     [Inject] private NetworkController _injectedNetworkController;
     [Inject] private NetworkRunner _injectedNetworkRunner;
     [Inject] private NetworkConnectionManager _injectedConnectionManager;
+    [InjectOptional] private NetworkInputHandler _injectedInputHandler;
     [Inject] private DiContainer _container;
-    
-    private void Awake()
-    {
-        Log("Awake");
-    }
-    
-    private void OnDestroy()
-    {
-        Log("OnDestroy");
-    }
     
     private void Start()
     {
         _networkController = _injectedNetworkController;
         _networkRunner = _injectedNetworkRunner;
         _connectionManager = _injectedConnectionManager;
-        
-        Log($"Dependencies injected: NetworkController={_networkController}, NetworkRunner={_networkRunner}, ConnectionManager={_connectionManager}");
+        _inputHandler = _injectedInputHandler;
         
         // Попытка получить зависимости из контейнера, если они не инжектированы
         if (_networkController == null && _container != null)
@@ -62,6 +55,12 @@ public class NetworkCallbackHandler : NetworkCallbackBase
             _connectionManager = _container.Resolve<NetworkConnectionManager>();
         }
         
+        // NetworkInputHandler может отсутствовать на MainMenuScene, это нормально
+        if (_inputHandler == null && _container != null)
+        {
+            Log("NetworkInputHandler not found on scene, this is normal for MainMenuScene");
+        }
+        
         if (_networkRunner != null)
         {
             SetupNetworkRunner(_networkRunner);
@@ -74,14 +73,11 @@ public class NetworkCallbackHandler : NetworkCallbackBase
         {
             _networkRunner = networkRunner;
             _networkRunner.AddCallbacks(this);
-            
-            Log($"NetworkRunner setup complete: {_networkRunner}");
         }
     }
+    
     public override void OnConnectedToServer(NetworkRunner runner)
     {
-        Log($"Connected to server. Runner: {runner}, IsServer: {runner.IsServer}, IsClient: {runner.IsClient}, LocalPlayer: {runner.LocalPlayer}");
-        
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(ConnectionState.Connected, "Connected to server"));
     }
     
@@ -97,8 +93,6 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnDisconnectedFromServer(NetworkRunner runner)
     {
-        Log($"Disconnected from server. Runner: {runner}");
-        
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(ConnectionState.Disconnected, "Disconnected from server"));
         
         _networkController?.LoadScene("MainMenuScene");
@@ -106,8 +100,6 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
     {
-        Log($"Player joined. Player: {player}, IsLocalPlayer: {player == runner.LocalPlayer}, IsServer: {runner.IsServer}");
-        
         EventBus.RaiseEvent(new PlayerJoinedEvent(player, player == runner.LocalPlayer));
         
         if (player == runner.LocalPlayer && runner.IsServer)
@@ -118,8 +110,6 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason) 
     {
-        Log($"Shutdown reason: {shutdownReason}. Runner: {runner}");
-        
         EventBus.RaiseEvent(new ConnectionStateChangedEvent(ConnectionState.Disconnected, $"Shutdown: {shutdownReason}"));
         
         _networkController?.LoadScene("MainMenuScene");
@@ -127,26 +117,26 @@ public class NetworkCallbackHandler : NetworkCallbackBase
     
     public override void OnPlayerLeft(NetworkRunner runner, PlayerRef player) 
     {
-        Log($"Player left. Player: {player}, IsLocalPlayer: {player == runner.LocalPlayer}");
-        
         EventBus.RaiseEvent(new PlayerLeftEvent(player, player == runner.LocalPlayer));
     }
     
     public override void OnSceneLoadStart(NetworkRunner runner)
     {
-        Log($"Scene load start. Runner: {runner}");
-        
         EventBus.RaiseEvent(new SceneLoadStartEvent());
     }
     
     public override void OnSceneLoadDone(NetworkRunner runner) 
     {
-        Log($"Scene load done. Runner: {runner}, IsServer: {runner.IsServer}, ActivePlayers: {runner.ActivePlayers.Count()}");
-        
         EventBus.RaiseEvent(new SceneLoadDoneEvent());
         
         // Генерируем событие готовности сети для координации спавна игроков
-        Log($"[NetworkCallbackHandler] [EventBus] - Генерируем NetworkReadyEvent, IsServer={runner.IsServer}");
         EventBus.RaiseEvent(new NetworkReadyEvent(runner, runner.IsServer));
+    }
+    
+    public override void OnInput(NetworkRunner runner, NetworkInput input)
+    {
+        // NetworkInputHandler теперь сам обрабатывает ввод через свой OnInput callback
+        // Здесь оставляем пустую реализацию, чтобы избежать дублирования
+        Log("NetworkCallbackHandler OnInput called - input handled by NetworkInputHandler");
     }
 } 

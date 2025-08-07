@@ -20,25 +20,14 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     [Inject] private NetworkRunner _injectedNetworkRunner;
     [Inject] private DiContainer _container;
     
-    private void Awake()
-    {
-        Log("Awake");
-    }
-    
-    [Inject]
-    private void PostInject()
-    {
-        Log($"PostInject - NetworkRunner injected: {_injectedNetworkRunner}");
-    }
-    
     private void OnDestroy()
     {
         if (_networkRunner != null)
         {
             _networkRunner.RemoveCallbacks(this);
-            Log("Callbacks removed from NetworkRunner");
         }
     }
+    
     public void LogNetworkState()
     {
         if (_networkRunner != null)
@@ -77,6 +66,7 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     {
         LogNetworkState();
     }
+    
     public override void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
         if (_gameConfig?.EnableDebugLogs == true)
@@ -140,31 +130,24 @@ public class NetworkDebugger : NetworkCallbackBase, IDebugService
     
     private void Start()
     {
-        Log("Start");
-        
         _networkRunner = _injectedNetworkRunner;
         _gameConfig = ConfigManager.GameConfig;
-        
-        Log($"Dependencies initialized: NetworkRunner={_networkRunner}, GameConfig={_gameConfig}");
         
         // Попытка получить NetworkRunner из контейнера, если он не инжектирован
         if (_networkRunner == null && _container != null)
         {
             LogWarning("NetworkRunner is null, attempting to resolve from container");
             _networkRunner = _container.Resolve<NetworkRunner>();
-            Log($"NetworkRunner resolved from container: {_networkRunner != null}");
         }
         
         if (_gameConfig != null && !_gameConfig.EnableNetworkDebugger)
         {
-            Log("Network debugger disabled in config");
             return;
         }
         
         if (_networkRunner != null)
         {
             _networkRunner.AddCallbacks(this);
-            Log($"NetworkRunner callbacks added: {_networkRunner}");
         }
         else
         {

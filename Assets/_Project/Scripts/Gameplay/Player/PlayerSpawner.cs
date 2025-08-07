@@ -39,13 +39,6 @@ public class PlayerSpawner : NetworkCallbackBase
     {
         Log("[PlayerSpawner] [EventBus] - Подписываемся на NetworkReadyEvent");
         EventBus.Subscribe<NetworkReadyEvent>(OnNetworkReady);
-        
-        // Дополнительная проверка на случай, если событие уже прошло
-        if (_isInitialized && _networkRunner != null && _networkRunner.IsRunning && _networkRunner.IsServer)
-        {
-            Log("[PlayerSpawner] [EventBus] - Дополнительная проверка: NetworkRunner готов, спавним игроков");
-            SpawnExistingPlayers();
-        }
     }
     
     private void OnDisable()

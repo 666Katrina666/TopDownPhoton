@@ -121,33 +121,41 @@ public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
             return existingService;
         }
         
-        // Используем Resources.Load как в логах
+        // Сначала пытаемся загрузить из префаба
         var networkServicePrefab = Resources.Load<GameObject>("NetworkService");
         
         if (networkServicePrefab != null)
         {
             var networkServiceInstance = Container.InstantiatePrefab(networkServicePrefab);
-            var networkService = networkServiceInstance.GetComponent<NetworkService>();
+            var prefabNetworkService = networkServiceInstance.GetComponent<NetworkService>();
             
-            if (networkService != null)
+            if (prefabNetworkService != null)
             {
                 // Устанавливаем родителя в null, чтобы объект стал корневым
                 networkServiceInstance.transform.SetParent(null);
                 DontDestroyOnLoad(networkServiceInstance);
-                Log("NetworkService created and bound as persistent singleton");
-                return networkService;
+                Log("NetworkService created from prefab and bound as persistent singleton");
+                return prefabNetworkService;
             }
             else
             {
-                LogError("NetworkService component not found in prefab!");
+                LogWarning("NetworkService component not found in prefab, creating manually");
             }
         }
         else
         {
-            LogError("NetworkService prefab not found in Resources!");
+            LogWarning("NetworkService prefab not found in Resources, creating manually");
         }
         
-        return null;
+        // Создаем вручную, если префаб недоступен
+        var serviceObject = new GameObject("NetworkService");
+        var manualNetworkService = Container.InstantiateComponent<NetworkService>(serviceObject);
+        
+        // Устанавливаем DontDestroyOnLoad чтобы объект не уничтожался при смене сцен
+        DontDestroyOnLoad(serviceObject);
+        
+        Log("NetworkService created manually and bound as persistent singleton");
+        return manualNetworkService;
     }
     
     private SceneService CreateSceneService(InjectContext context)
