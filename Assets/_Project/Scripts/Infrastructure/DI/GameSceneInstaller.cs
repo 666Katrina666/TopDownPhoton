@@ -17,6 +17,10 @@ public class GameSceneInstaller : MonoInstaller
     [SerializeField] private GameObject playerSpawnerPrefab;
     [FoldoutGroup("Prefabs")]
     [SerializeField] private GameObject networkInputHandlerPrefab;
+
+    [FoldoutGroup("Combat")]
+    [InfoBox("Конфигурация боя и префаб снаряда")]
+    [SerializeField] private CombatConfig combatConfig;
     
     [FoldoutGroup("Debug Settings")]
     [InfoBox("Настройки отладки")]
@@ -64,7 +68,13 @@ public class GameSceneInstaller : MonoInstaller
         
         // Устанавливаем биндинги для игровых компонентов
         InstallPlayerBindings();
+
+            // Бинды боя
+        InstallCombatBindings();
         
+            // Создаём настройщик боевых компонентов сразу, до возможного спавна игроков
+        CreateCombatSetupImmediate();
+
         Log("GameScene installation completed successfully");
         
         // Запускаем создание объектов после завершения установки
@@ -99,6 +109,21 @@ public class GameSceneInstaller : MonoInstaller
         
         // Биндинги будут установлены после создания объектов
         Log("Player bindings installation completed");
+    }
+
+    /// <summary>
+    /// Устанавливает биндинги для боевой системы
+    /// </summary>
+    private void InstallCombatBindings()
+    {
+        if (combatConfig == null)
+        {
+            LogWarning("CombatConfig не назначен! Боевые биндинги будут частично недоступны.");
+            return;
+        }
+
+        Container.Bind<CombatConfig>().FromInstance(combatConfig).AsSingle();
+        Container.Bind<IProjectileFactory>().To<ProjectileFactory>().AsSingle();
     }
     
     /// <summary>
@@ -155,5 +180,25 @@ public class GameSceneInstaller : MonoInstaller
         Log($"NetworkInputHandler created and bound as singleton - GameObject: {networkInputHandlerInstance.name} (ID: {networkInputHandlerInstance.GetInstanceID()})");
         
         Log("Player components creation completed successfully");
+    }
+
+    /// <summary>
+    /// Создаёт PlayerCombatSetup немедленно, чтобы успеть на подписку до спавна игроков
+    /// </summary>
+    private void CreateCombatSetupImmediate()
+    {
+        var existing = GetComponentInChildren<PlayerCombatSetup>(true);
+        if (existing != null)
+        {
+            Container.Inject(existing);
+            Log("PlayerCombatSetup already exists, injected");
+            return;
+        }
+
+        var combatSetupGo = new GameObject("PlayerCombatSetup");
+        combatSetupGo.transform.SetParent(this.transform);
+        var combatSetup = combatSetupGo.AddComponent<PlayerCombatSetup>();
+        Container.Inject(combatSetup);
+        Log("PlayerCombatSetup created and injected (immediate)");
     }
 } 

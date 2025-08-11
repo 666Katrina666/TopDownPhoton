@@ -20,6 +20,10 @@ public class PlayerInputProcessor : LoggableNetworkBehaviour
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private bool _hasInputAuthority;
     
+    [FoldoutGroup("Animation")]
+    [InfoBox("Ссылка на контроллер анимаций")]
+    [SerializeField] private PlayerAnimationController _animationController;
+    
     private NetworkObject _networkObject;
     private Rigidbody2D _rigidbody;
     
@@ -35,6 +39,8 @@ public class PlayerInputProcessor : LoggableNetworkBehaviour
             _rigidbody.linearDamping = 0f;
             _rigidbody.angularDamping = 0f;
         }
+        
+        ValidateAnimationController();
     }
     
     public override void Spawned()
@@ -60,6 +66,33 @@ public class PlayerInputProcessor : LoggableNetworkBehaviour
         {
             Vector2 movement = input.moveDirection * _moveSpeed * Runner.DeltaTime;
             _rigidbody.MovePosition(_rigidbody.position + movement);
+        }
+        
+        // Обновляем анимации
+        if (_animationController != null)
+        {
+            _animationController.UpdateAnimationParameters(input);
+        }
+    }
+    
+    /// <summary>
+    /// Проверяет и настраивает ссылку на анимационный контроллер
+    /// </summary>
+    private void ValidateAnimationController()
+    {
+        if (_animationController == null)
+        {
+            // Ищем в дочерних объектах
+            _animationController = GetComponentInChildren<PlayerAnimationController>();
+            
+            if (_animationController == null)
+            {
+                LogWarning("[PlayerInputProcessor] [Валидация анимаций] - PlayerAnimationController не найден в дочерних объектах!");
+            }
+            else
+            {
+                Log("[PlayerInputProcessor] [Валидация анимаций] - PlayerAnimationController найден автоматически");
+            }
         }
     }
 }

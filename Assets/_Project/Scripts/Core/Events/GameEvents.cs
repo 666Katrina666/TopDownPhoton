@@ -74,3 +74,20 @@ public struct LeaveLobbyEvent
 {
     // Пустая структура для события
 }
+
+/// <summary>
+/// Событие об изменении анимации персонажа
+/// </summary>
+public struct PlayerAnimationChangedEvent
+{
+    public PlayerRef PlayerRef;
+    public int Direction;
+    public bool IsMoving;
+    
+    public PlayerAnimationChangedEvent(PlayerRef playerRef, int direction, bool isMoving)
+    {
+        PlayerRef = playerRef;
+        Direction = direction;
+        IsMoving = isMoving;
+    }
+}

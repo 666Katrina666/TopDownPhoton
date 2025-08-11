@@ -13,15 +13,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
-                },
-                {
-                    "name": "MousePosition",
-                    "type": "Value",
-                    "id": "44489b46-f655-4d6d-ba0e-084a6f1f4cfb",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -79,15 +70,32 @@
                     "action": "Move",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
+                }
+            ]
+        },
+        {
+            "name": "Combat",
+            "id": "8b3c1dd8-0d1e-4ee2-8ed9-9b0f5a1a8b21",
+            "actions": [
+                {
+                    "name": "FirePrimary",
+                    "type": "Button",
+                    "id": "3a7cf3c1-1e0c-4a0d-9c7e-2b7a0e4f4d91",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
                 {
                     "name": "",
-                    "id": "34c2f20a-bbb6-42ba-8dfb-808fce7e67f7",
-                    "path": "<Mouse>/position",
+                    "id": "a4f5a2c0-1b0c-4a1c-9d8f-7a2b3c4d5e6f",
+                    "path": "<Mouse>/leftButton",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MousePosition",
+                    "action": "FirePrimary",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

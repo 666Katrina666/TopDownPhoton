@@ -1873,6 +1873,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1270200303351595058, guid: 97d98376d0805e04fb9c24e6b8e5e1e6, type: 3}
+      propertyPath: enableLogging
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3133169213408879897, guid: 97d98376d0805e04fb9c24e6b8e5e1e6, type: 3}
       propertyPath: m_Name
       value: NetworkRunner

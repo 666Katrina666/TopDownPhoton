@@ -27,13 +27,13 @@ public class NetworkInputHandler : NetworkCallbackBase
     {
         _isConnected = _networkRunner != null;
         
-        Log($"NetworkInputHandler initialized. Connected: {_isConnected}");
+        Log($"[NetworkInputHandler] - Initialized. Connected: {_isConnected}");
         
         // Регистрируем себя как callback в NetworkRunner
         if (_networkRunner != null)
         {
             _networkRunner.AddCallbacks(this);
-            Log("NetworkInputHandler registered as NetworkRunner callback");
+            Log("[NetworkInputHandler] - Registered as NetworkRunner callback");
         }
     }
     
@@ -60,8 +60,10 @@ public class NetworkInputHandler : NetworkCallbackBase
     {
         NetworkInputData inputData = GetInputData();
         input.Set(inputData);
-        
-        //Log($"Input sent to network: Move={inputData.moveDirection}, IsMoving={inputData.isMoving}, Interact={inputData.isInteracting}");
+        if (inputData.isFiring)
+        {
+            Debug.Log($"[NetworkInputHandler] - Fire captured this frame. Dir={inputData.moveDirection}");
+        }
     }
     
     /// <summary>
@@ -72,12 +74,14 @@ public class NetworkInputHandler : NetworkCallbackBase
     {
         Vector2 direction = GetMovementInput();
         bool isInteracting = GetInteractionInput();
+        bool isFiring = GetFireInput();
         
         return new NetworkInputData
         {
             moveDirection = direction,
             isMoving = direction.magnitude > 0.1f,
-            isInteracting = isInteracting
+            isInteracting = isInteracting,
+            isFiring = isFiring
         };
     }
     
@@ -104,5 +108,26 @@ public class NetworkInputHandler : NetworkCallbackBase
     {
         // Используем старый ввод для взаимодействия, так как в локальном InputActions нет действия Interact
         return Input.GetKey(KeyCode.E);
+    }
+
+    private bool GetFireInput()
+    {
+        // Если в InputActions добавлено действие FirePrimary, используем его, иначе fallback на ЛКМ
+        try
+        {
+            var fire = _inputActions?.FindAction("Combat/FirePrimary", throwIfNotFound: false);
+            if (fire != null)
+            {
+                bool pressed = fire.WasPressedThisFrame();
+                if (pressed)
+                {
+                    Debug.Log("[NetworkInputHandler] - FirePrimary action WasPressedThisFrame");
+                }
+                return pressed;
+            }
+        }
+        catch { /* игнорируем отсутствие карты действий */ }
+
+        return Input.GetMouseButtonDown(0);
     }
 }
