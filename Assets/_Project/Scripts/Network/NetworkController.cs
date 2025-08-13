@@ -21,6 +21,10 @@ public class NetworkController : LoggableMonoBehaviour
     private ISceneService _sceneService;
     [FoldoutGroup("Dependencies")]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
+    private IScreenFadeService _screenFadeService;
+    private bool _isManualSceneChange;
+    [FoldoutGroup("Dependencies")]
+    [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private DiContainer _container;
     #endregion
     
@@ -39,10 +43,11 @@ public class NetworkController : LoggableMonoBehaviour
     }
     
     [Inject]
-    private void Construct(INetworkService networkService, ISceneService sceneService, DiContainer container)
+    private void Construct(INetworkService networkService, ISceneService sceneService, IScreenFadeService screenFadeService, DiContainer container)
     {
         _networkService = networkService;
         _sceneService = sceneService;
+        _screenFadeService = screenFadeService;
         _container = container;
     }
     
@@ -64,12 +69,16 @@ public class NetworkController : LoggableMonoBehaviour
     {
         EventBus.Subscribe<GameStartedEvent>(OnGameStarted);
         EventBus.Subscribe<LeaveLobbyEvent>(OnLeaveLobby);
+        EventBus.Subscribe<SceneLoadStartEvent>(OnSceneLoadStart);
+        EventBus.Subscribe<SceneLoadDoneEvent>(OnSceneLoadDone);
     }
     
     private void UnsubscribeFromEvents()
     {
         EventBus.Unsubscribe<GameStartedEvent>(OnGameStarted);
         EventBus.Unsubscribe<LeaveLobbyEvent>(OnLeaveLobby);
+        EventBus.Unsubscribe<SceneLoadStartEvent>(OnSceneLoadStart);
+        EventBus.Unsubscribe<SceneLoadDoneEvent>(OnSceneLoadDone);
     }
     
     private void OnGameStarted(GameStartedEvent evt)
@@ -116,8 +125,14 @@ public class NetworkController : LoggableMonoBehaviour
         }
         
         string currentScene = _sceneService.CurrentSceneName ?? SceneManager.GetActiveScene().name;
-        
-        _networkService.LoadScene(sceneName);
+        Log($"[FadeFlow] - Request LoadScene '{sceneName}' from '{currentScene}'");
+
+        if (currentScene == sceneName)
+        {
+            LogWarning("[FadeFlow] - Target scene equals current scene, skipping fade and load");
+            return;
+        }
+        LoadSceneWithFade(sceneName);
         
         EventBus.RaiseEvent(new SceneChangedEvent(currentScene, sceneName));
     }
@@ -172,5 +187,50 @@ public class NetworkController : LoggableMonoBehaviour
         {
             LogWarning("NetworkService is null during scene load");
         }
+
+        // После загрузки сцены делаем fade-in
+        FadeInAfterLoad();
+    }
+
+    private async void LoadSceneWithFade(string sceneName)
+    {
+        if (_screenFadeService != null)
+        {
+            Log($"[FadeFlow] - FadeOut before loading '{sceneName}'");
+            await _screenFadeService.FadeOut(0.25f);
+        }
+        else
+        {
+            LogWarning("ScreenFadeService is null, loading scene without fade");
+        }
+        _isManualSceneChange = true;
+        Log($"[FadeFlow] - Calling NetworkService.LoadScene('{sceneName}')");
+        _networkService.LoadScene(sceneName);
+    }
+
+    private async void FadeInAfterLoad()
+    {
+        if (_screenFadeService != null)
+        {
+            Log("[FadeFlow] - FadeIn after scene loaded");
+            await _screenFadeService.FadeIn(0.25f);
+        }
+    }
+
+    private async void OnSceneLoadStart(SceneLoadStartEvent _)
+    {
+        Log("[FadeFlow] - Received SceneLoadStartEvent");
+        if (!_isManualSceneChange && _screenFadeService != null)
+        {
+            Log("[FadeFlow] - External load detected -> FadeOut now");
+            await _screenFadeService.FadeOut(0.2f);
+        }
+    }
+
+    private void OnSceneLoadDone(SceneLoadDoneEvent _)
+    {
+        Log("[FadeFlow] - Received SceneLoadDoneEvent -> triggering FadeIn");
+        _isManualSceneChange = false;
+        FadeInAfterLoad();
     }
 } 

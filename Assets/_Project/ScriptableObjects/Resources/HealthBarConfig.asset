@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc028296abeaae944aa4a81a4c3d378f, type: 3}
+  m_Name: HealthBarConfig
+  m_EditorClassIdentifier: 
+  yOffset: 1
+  billboard: 1
+  frontIsSlider: 1
+  backIsSlider: 1
+  tailDelay: 0.2
+  tailDuration: 0.35
+  tailEase: 9
+  useUnscaledTime: 1
+  autoHide: 0
+  hideDelay: 1.25

@@ -109,6 +109,9 @@ public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
         // Сначала создаем сервисы
         Container.Bind<INetworkService>().To<NetworkService>().FromMethod(CreateNetworkService).AsSingle();
         Container.Bind<ISceneService>().To<SceneService>().FromMethod(CreateSceneService).AsSingle();
+        Container.Bind<ITweenService>().To<DOTweenService>().FromMethod(CreateDOTweenService).AsSingle();
+        Container.Bind<IScreenFadeService>().To<ScreenFadeService>().FromMethod(CreateScreenFadeService).AsSingle();
+        Container.Bind<ICameraShakeService>().To<DOTweenCameraShakeService>().FromMethod(CreateCameraShakeService).AsSingle();
         
         // Затем создаем контроллеры, которые зависят от сервисов
         Container.Bind<NetworkController>().FromMethod(CreateNetworkController).AsSingle();
@@ -185,6 +188,51 @@ public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
         
         Log("SceneService created as persistent singleton");
         return sceneService;
+    }
+
+    private DOTweenService CreateDOTweenService(InjectContext context)
+    {
+        var existing = FindFirstObjectByType<DOTweenService>();
+        if (existing != null)
+        {
+            Log($"Existing DOTweenService found: {existing.name}");
+            return existing;
+        }
+        var go = new GameObject("DOTweenService");
+        var service = Container.InstantiateComponent<DOTweenService>(go);
+        DontDestroyOnLoad(go);
+        Log("DOTweenService created as persistent singleton");
+        return service;
+    }
+
+    private ScreenFadeService CreateScreenFadeService(InjectContext context)
+    {
+        var existing = FindFirstObjectByType<ScreenFadeService>();
+        if (existing != null)
+        {
+            Log($"Existing ScreenFadeService found: {existing.name}");
+            return existing;
+        }
+        var go = new GameObject("ScreenFadeService");
+        var service = Container.InstantiateComponent<ScreenFadeService>(go);
+        DontDestroyOnLoad(go);
+        Log("ScreenFadeService created as persistent singleton");
+        return service;
+    }
+
+    private DOTweenCameraShakeService CreateCameraShakeService(InjectContext context)
+    {
+        var existing = FindFirstObjectByType<DOTweenCameraShakeService>();
+        if (existing != null)
+        {
+            Log($"Existing DOTweenCameraShakeService found: {existing.name}");
+            return existing;
+        }
+        var go = new GameObject("DOTweenCameraShakeService");
+        var service = Container.InstantiateComponent<DOTweenCameraShakeService>(go);
+        DontDestroyOnLoad(go);
+        Log("DOTweenCameraShakeService created as persistent singleton");
+        return service;
     }
     
     private NetworkController CreateNetworkController(InjectContext context)

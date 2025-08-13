@@ -29,4 +29,21 @@ public struct DamageTakenEvent
     }
 }
 
+/// <summary>
+/// Событие изменения здоровья
+/// </summary>
+public struct HealthChangedEvent
+{
+	public NetworkObject Target { get; }
+	public int Current { get; }
+	public int Max { get; }
+
+	public HealthChangedEvent(NetworkObject target, int current, int max)
+	{
+		Target = target;
+		Current = current;
+		Max = max;
+	}
+}
+
 
