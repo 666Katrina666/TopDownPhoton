@@ -8,6 +8,6 @@ public struct NetworkInputData : INetworkInput
 {
     public Vector2 moveDirection;
     public bool isMoving;
-    public bool isInteracting;
     public bool isFiring;
+    public Vector2 mouseWorldPosition;
 } 

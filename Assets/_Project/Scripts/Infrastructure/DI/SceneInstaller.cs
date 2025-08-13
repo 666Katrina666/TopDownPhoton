@@ -9,6 +9,7 @@ using Sirenix.OdinInspector;
 /// </summary>
 public class SceneInstaller : MonoInstaller
 {    
+    #region Settings
     [FoldoutGroup("Debug Settings")]
     [InfoBox("Настройки отладки")]
     [SerializeField] private bool enableLogging = true;
@@ -16,6 +17,7 @@ public class SceneInstaller : MonoInstaller
     [FoldoutGroup("Scene")]
     [InfoBox("Сценовые компоненты")]
     [SerializeField] private bool _installGameBootstrap = true;
+    #endregion
     
     /// <summary>
     /// Выводит сообщение в консоль, если включено логирование
@@ -53,6 +55,7 @@ public class SceneInstaller : MonoInstaller
         }
     }
     
+    #region Unity Callbacks
     public override void InstallBindings()
     {
         Log("Starting Scene installation...");
@@ -106,4 +109,5 @@ public class SceneInstaller : MonoInstaller
         
         Log($"Start method called for object {gameObject.name} (ID: {GetInstanceID()})");
     }
+    #endregion
 } 

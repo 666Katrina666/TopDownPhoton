@@ -8,12 +8,17 @@ using Core.Base;
 /// </summary>
 public class LobbyButtonController : LoggableMonoBehaviour
 {
+    #region Runtime Data
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private GameConfig _gameConfig;
+    #endregion
     
+    #region Dependencies
     [Inject] private NetworkController _networkController;
+    #endregion
     
+    #region Unity Callbacks
     private void Start()
     {
         _gameConfig = ConfigManager.GameConfig;
@@ -23,7 +28,9 @@ public class LobbyButtonController : LoggableMonoBehaviour
             LogWarning("GameConfig not found!");
         }
     }
+    #endregion
     
+    #region Commands
     /// <summary>
     /// Начать игру - переход в игровую сцену
     /// </summary>
@@ -64,4 +71,5 @@ public class LobbyButtonController : LoggableMonoBehaviour
     {
         EventBus.RaiseEvent(new LeaveLobbyEvent());
     }
+    #endregion
 } 

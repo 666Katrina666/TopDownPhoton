@@ -56,7 +56,7 @@ public class DamageFlashView : LoggableMonoBehaviour
     private void OnEnable()
     {
         EventBus.Subscribe<DamageTakenEvent>(OnDamageTaken);
-        Log("[DamageFlashView] - Подписка на DamageTakenEvent");
+        Log("Подписка на DamageTakenEvent");
     }
 
     private void OnDisable()
@@ -84,7 +84,7 @@ public class DamageFlashView : LoggableMonoBehaviour
         }
 
         _flashRoutine = StartCoroutine(FlashCoroutine());
-        Log("[DamageFlashView] - Hit flash triggered");
+        Log("Hit flash triggered");
     }
 
     private IEnumerator FlashCoroutine()

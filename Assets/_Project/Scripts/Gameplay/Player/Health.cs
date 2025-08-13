@@ -20,7 +20,7 @@ public class Health : LoggableNetworkBehaviour
         {
             CurrentHp = _maxHp;
         }
-        Log($"[Health] - Spawned with HP={CurrentHp}/{_maxHp}");
+        Log($"Spawned with HP={CurrentHp}/{_maxHp}");
     }
 
     /// <summary>
@@ -40,12 +40,12 @@ public class Health : LoggableNetworkBehaviour
         }
 
         CurrentHp = Mathf.Max(0, CurrentHp - dmg);
-        Log($"[Health] - Damage {dmg} from {source}. HP={CurrentHp}/{_maxHp}");
+        Log($"Damage {dmg} from {source}. HP={CurrentHp}/{_maxHp}");
         RpcNotifyDamage(dmg);
 
         if (CurrentHp <= 0)
         {
-            Log("[Health] - HP reached 0");
+            Log("HP reached 0");
         }
     }
 

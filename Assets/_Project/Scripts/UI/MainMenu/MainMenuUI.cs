@@ -9,6 +9,7 @@ using Core.Base;
 /// </summary>
 public class MainMenuUI : LoggableMonoBehaviour
 {
+    #region UI References
     [FoldoutGroup("UI References")]
     [InfoBox("Ссылки на UI элементы")]
     [SerializeField] private Button _hostButton;
@@ -20,13 +21,15 @@ public class MainMenuUI : LoggableMonoBehaviour
     [SerializeField] private GameObject _loadingIndicator;
     [FoldoutGroup("UI References")]
     [SerializeField] private TextMeshProUGUI _errorText;
-    
+    #endregion
 
-    
+    #region Runtime Data
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private ConnectionState _currentState = ConnectionState.Disconnected;
-    
+    #endregion
+
+    #region Unity Callbacks
     private void Awake()
     {
         ValidateUIReferences();
@@ -42,6 +45,7 @@ public class MainMenuUI : LoggableMonoBehaviour
         SubscribeToEvents();
         UpdateUI();
     }
+    #endregion
     
     private void SubscribeToEvents()
     {

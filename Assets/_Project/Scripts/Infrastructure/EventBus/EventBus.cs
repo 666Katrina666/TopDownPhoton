@@ -6,8 +6,11 @@ using System.Collections.Generic;
 /// </summary>
 public static class EventBus
 {
+    #region State
     private static readonly Dictionary<Type, List<Delegate>> _subscribers = new();
-    
+    #endregion
+
+    #region API
     /// <summary>
     /// Подписка на событие определённого типа
     /// </summary>
@@ -60,4 +63,5 @@ public static class EventBus
     {
         _subscribers.Clear();
     }
+    #endregion
 }

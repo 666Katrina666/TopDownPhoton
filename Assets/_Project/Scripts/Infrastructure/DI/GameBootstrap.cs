@@ -10,6 +10,7 @@ using Core.Base;
 /// </summary>
 public class GameBootstrap : LoggableMonoBehaviour
 {
+    #region Dependencies
     [FoldoutGroup("Dependencies")]
     [InfoBox("Зависимости")]
     [ShowInInspector, ReadOnly]
@@ -24,13 +25,17 @@ public class GameBootstrap : LoggableMonoBehaviour
     [Inject] private INetworkService _injectedNetworkService;
     [Inject] private ISceneService _injectedSceneService;
     [Inject] private DiContainer _container;
+    #endregion
     
+    #region Settings
     [FoldoutGroup("Settings")]
     [InfoBox("Настройки инициализации")]
     [SerializeField] private bool _isPersistent = true;
     [FoldoutGroup("Settings")]
     [SerializeField] private bool _handleSceneChanges = true;
+    #endregion
     
+    #region Unity Callbacks
     private void Awake()
     {
         Log("Awake");
@@ -108,7 +113,9 @@ public class GameBootstrap : LoggableMonoBehaviour
         
         InitializeGame();
     }
+    #endregion
     
+    #region Initialization
     private void SubscribeToEvents()
     {
         EventBus.Subscribe<SceneChangedEvent>(OnSceneChanged);
@@ -146,6 +153,8 @@ public class GameBootstrap : LoggableMonoBehaviour
         
         Log("Game initialization completed");
     }
+    #endregion
+    #region Event Handlers
     private void OnSceneChanged(SceneChangedEvent evt)
     {
         Log($"Scene changed from {evt.PreviousScene} to {evt.CurrentScene}");
@@ -165,4 +174,5 @@ public class GameBootstrap : LoggableMonoBehaviour
             EventBus.RaiseEvent(new SceneChangedEvent(_sceneService.CurrentSceneName, scene.name));
         }
     }
+    #endregion
 } 

@@ -6,7 +6,7 @@ using Fusion;
 /// </summary>
 public struct StartHostRequestEvent
 {
-    public string RoomName;
+    public string RoomName { get; }
     
     public StartHostRequestEvent(string roomName = "")
     {
@@ -19,7 +19,7 @@ public struct StartHostRequestEvent
 /// </summary>
 public struct StartClientRequestEvent
 {
-    public string RoomName;
+    public string RoomName { get; }
     
     public StartClientRequestEvent(string roomName = "")
     {
@@ -32,8 +32,8 @@ public struct StartClientRequestEvent
 /// </summary>
 public struct ConnectionStateChangedEvent
 {
-    public ConnectionState State;
-    public string Message;
+    public ConnectionState State { get; }
+    public string Message { get; }
     
     public ConnectionStateChangedEvent(ConnectionState state, string message = "")
     {
@@ -47,7 +47,7 @@ public struct ConnectionStateChangedEvent
 /// </summary>
 public struct ConnectionErrorEvent
 {
-    public string ErrorMessage;
+    public string ErrorMessage { get; }
     
     public ConnectionErrorEvent(string errorMessage)
     {
@@ -60,8 +60,8 @@ public struct ConnectionErrorEvent
 /// </summary>
 public struct PlayerJoinedEvent
 {
-    public PlayerRef Player;
-    public bool IsLocalPlayer;
+    public PlayerRef Player { get; }
+    public bool IsLocalPlayer { get; }
     
     public PlayerJoinedEvent(PlayerRef player, bool isLocalPlayer)
     {
@@ -75,8 +75,8 @@ public struct PlayerJoinedEvent
 /// </summary>
 public struct PlayerLeftEvent
 {
-    public PlayerRef Player;
-    public bool IsLocalPlayer;
+    public PlayerRef Player { get; }
+    public bool IsLocalPlayer { get; }
     
     public PlayerLeftEvent(PlayerRef player, bool isLocalPlayer)
     {
@@ -104,8 +104,8 @@ public struct SceneLoadDoneEvent
 /// </summary>
 public struct NetworkConnectedEvent
 {
-    public bool IsConnected;
-    public string RoomName;
+    public bool IsConnected { get; }
+    public string RoomName { get; }
     
     public NetworkConnectedEvent(bool isConnected, string roomName = "")
     {
@@ -119,8 +119,8 @@ public struct NetworkConnectedEvent
 /// </summary>
 public struct NetworkReadyEvent
 {
-    public NetworkRunner Runner;
-    public bool IsServer;
+    public NetworkRunner Runner { get; }
+    public bool IsServer { get; }
     
     public NetworkReadyEvent(NetworkRunner runner, bool isServer)
     {

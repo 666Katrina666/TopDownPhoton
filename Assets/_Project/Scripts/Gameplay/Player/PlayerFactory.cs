@@ -28,19 +28,19 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
     {
         if (_networkRunner == null)
         {
-            LogError("[PlayerFactory] [Создание игрока] - NetworkRunner null!");
+            LogError("[Создание игрока] - NetworkRunner null!");
             return null;
         }
         
         if (!_playerPrefab.IsValid)
         {
-            LogError("[PlayerFactory] [Создание игрока] - PlayerPrefab не назначен!");
+            LogError("[Создание игрока] - PlayerPrefab не назначен!");
             return null;
         }
         
         if (_spawnedPlayers.ContainsKey(playerRef))
         {
-            LogWarning($"[PlayerFactory] [Создание игрока] - Игрок {playerRef} уже заспавнен!");
+            LogWarning($"[Создание игрока] - Игрок {playerRef} уже заспавнен!");
             return _spawnedPlayers[playerRef];
         }
         
@@ -52,17 +52,16 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
             {
                 _spawnedPlayers.Add(playerRef, networkPlayerObject);
                 
-                // Отправляем событие о создании игрока
                 EventBus.RaiseEvent(new PlayerSpawnedEvent(playerRef, networkPlayerObject));
             }
             else
             {
-                LogError($"[PlayerFactory] [Создание игрока] - NetworkRunner.Spawn вернул null для игрока {playerRef}!");
+                LogError($"[Создание игрока] - NetworkRunner.Spawn вернул null для игрока {playerRef}!");
             }
         }
         catch (System.Exception ex)
         {
-            LogError($"[PlayerFactory] [Создание игрока] - Исключение при спавне игрока {playerRef}: {ex.Message}");
+            LogError($"[Создание игрока] - Исключение при спавне игрока {playerRef}: {ex.Message}");
         }
         
         return _spawnedPlayers.TryGetValue(playerRef, out var result) ? result : null;
@@ -72,7 +71,7 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
     {
         if (playerObject == null)
         {
-            LogWarning("[PlayerFactory] [Удаление игрока] - PlayerObject null, пропускаем");
+            LogWarning("[Удаление игрока] - PlayerObject null, пропускаем");
             return;
         }
         
@@ -82,12 +81,11 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
         {
             _spawnedPlayers.Remove(playerRef);
             
-            // Отправляем событие об удалении игрока
             EventBus.RaiseEvent(new PlayerDespawnedEvent(playerRef));
         }
         else
         {
-            LogWarning($"[PlayerFactory] [Удаление игрока] - Игрок {playerRef} не найден в отслеживании");
+            LogWarning($"[Удаление игрока] - Игрок {playerRef} не найден в отслеживании");
         }
         
         if (_networkRunner != null)
@@ -96,7 +94,7 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
         }
         else
         {
-            LogError("[PlayerFactory] [Удаление игрока] - NetworkRunner null, не можем деспавнить");
+            LogError("[Удаление игрока] - NetworkRunner null, не можем деспавнить");
         }
     }
     
@@ -113,7 +111,7 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
         }
         else
         {
-            LogWarning($"[PlayerFactory] [Удаление по PlayerRef] - Игрок {playerRef} не найден в заспавненных игроках!");
+            LogWarning($"[Удаление по PlayerRef] - Игрок {playerRef} не найден в заспавненных игроках!");
         }
     }
     
@@ -123,7 +121,7 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
         
         if (_gameConfig == null)
         {
-            LogWarning("[PlayerFactory] [Конфигурация] - GameConfig не найден!");
+            LogWarning("[Конфигурация] - GameConfig не найден!");
         }
     }
     
@@ -134,7 +132,7 @@ public class PlayerFactory : LoggableMonoBehaviour, IPlayerFactory
         
         if (_networkRunner == null)
         {
-            LogWarning("[PlayerFactory] [Zenject] - NetworkRunner null при инъекции!");
+            LogWarning("[Zenject] - NetworkRunner null при инъекции!");
         }
     }
 } 

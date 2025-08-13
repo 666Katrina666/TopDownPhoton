@@ -16,18 +16,24 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
         Left = 2,
         Right = 3
     }
+    
+    #region Animation Components
     [FoldoutGroup("Animation Components")]
     [InfoBox("Компоненты анимации")]
     [SerializeField] private Animator _animator;
     [FoldoutGroup("Animation Components")]
     [SerializeField] private NetworkMecanimAnimator _networkMecanimAnimator;
-    
+    #endregion
+
+    #region Settings
     [FoldoutGroup("Animation Settings")]
     [InfoBox("Настройки анимаций")]
     [SerializeField] private float _movementThreshold = 0.1f;
     [FoldoutGroup("Animation Settings")]
     [SerializeField] private float _directionThreshold = 0.5f;
-    
+    #endregion
+
+    #region Runtime Data
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private int _currentDirection;
     [FoldoutGroup("Runtime Data", false)]
@@ -38,13 +44,19 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private int _lastAppliedDirection = int.MinValue;
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private bool _lastAppliedIsMoving;
-    
+    #endregion
+
+    #region Networked
     [Networked] private int NetworkedDirection { get; set; }
     [Networked] private bool NetworkedIsMoving { get; set; }
+    #endregion
+
+    #region Constants
+    private static readonly int DIRECTION_HASH = Animator.StringToHash("Direction");
+    private static readonly int IS_MOVING_HASH = Animator.StringToHash("IsMoving");
+    #endregion
     
-    private static readonly int DirectionHash = Animator.StringToHash("Direction");
-    private static readonly int IsMovingHash = Animator.StringToHash("IsMoving");
-    
+    #region Unity Callbacks
     private void Awake()
     {
         ValidateComponents();
@@ -52,15 +64,15 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
     
     public override void Spawned()
     {
-        Log($"[PlayerAnimationController] [Спавн] - Анимационный контроллер заспавнен");
+        Log("[Спавн] - Анимационный контроллер заспавнен");
         ApplyNetworkedParamsToAnimator();
     }
     
     public override void FixedUpdateNetwork()
     {
-        // Для не-владельцев ввода применяем сетевые параметры (OnChanged покроет изменения, это вызов на всякий случай)
         ApplyNetworkedParamsToAnimator();
     }
+    #endregion
     
     /// <summary>
     /// Обновляет параметры анимации на основе ввода
@@ -82,16 +94,12 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
                 NetworkedIsMoving = isMoving;
             }
             
-            // Мгновенная локальная обратная связь у владельца ввода
             if (Object.HasInputAuthority)
             {
                 ApplyAnimatorParams(direction, isMoving);
             }
             
-            Log($"[PlayerAnimationController] [Обновление анимации] - Direction: {direction}, IsMoving: {isMoving}");
-            
-            // Отправляем событие об изменении анимации
-            EventBus.RaiseEvent(new PlayerAnimationChangedEvent(Object.InputAuthority, direction, isMoving));
+            Log($"[Обновление анимации] - Direction: {direction}, IsMoving: {isMoving}");
         }
     }
     
@@ -107,11 +115,11 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
         
         if (Mathf.Abs(moveDirection.y) > Mathf.Abs(moveDirection.x))
         {
-            return moveDirection.y > 0 ? (int)MovementDirection.Back : (int)MovementDirection.Front; // Back : Front
+            return moveDirection.y > 0 ? (int)MovementDirection.Back : (int)MovementDirection.Front;
         }
         else
         {
-            return moveDirection.x < 0 ? (int)MovementDirection.Left : (int)MovementDirection.Right; // Left : Right
+            return moveDirection.x < 0 ? (int)MovementDirection.Left : (int)MovementDirection.Right;
         }
     }
     
@@ -129,29 +137,27 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
     private void ApplyAnimatorParams(int direction, bool isMoving)
     {
         if (_animator == null)
-        {
             return;
-        }
 
         bool changed = false;
 
         if (_lastAppliedDirection != direction)
         {
-            _animator.SetInteger(DirectionHash, direction);
+            _animator.SetInteger(DIRECTION_HASH, direction);
             _lastAppliedDirection = direction;
             changed = true;
         }
 
         if (_lastAppliedIsMoving != isMoving)
         {
-            _animator.SetBool(IsMovingHash, isMoving);
+            _animator.SetBool(IS_MOVING_HASH, isMoving);
             _lastAppliedIsMoving = isMoving;
             changed = true;
         }
 
         if (changed)
         {
-            Log($"[PlayerAnimationController] [Animator] - Applied params Direction={direction}, IsMoving={isMoving}");
+            Log($"[Animator] - Applied params Direction={direction}, IsMoving={isMoving}");
         }
     }
 
@@ -165,7 +171,7 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
             _animator = GetComponent<Animator>();
             if (_animator == null)
             {
-                LogError("[PlayerAnimationController] [Валидация] - Animator не найден!");
+                LogError("[Валидация] - Animator не найден!");
             }
         }
         
@@ -174,7 +180,7 @@ public class PlayerAnimationController : LoggableNetworkBehaviour
             _networkMecanimAnimator = GetComponent<NetworkMecanimAnimator>();
             if (_networkMecanimAnimator == null)
             {
-                LogWarning("[PlayerAnimationController] [Валидация] - NetworkMecanimAnimator не найден");
+                LogWarning("[Валидация] - NetworkMecanimAnimator не найден");
             }
         }
     }

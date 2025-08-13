@@ -447,9 +447,9 @@ GameObject:
   - component: {fileID: 1632158680}
   - component: {fileID: 1632158679}
   - component: {fileID: 1632158682}
-  - component: {fileID: 1632158681}
   - component: {fileID: 1632158683}
   - component: {fileID: 1632158684}
+  - component: {fileID: 1632158685}
   m_Layer: 0
   m_Name: Maneken
   m_TagString: Untagged
@@ -527,21 +527,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1632158681
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1632158678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aff2df5d57680584ebcd71283a9a8d37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enableLogging: 1
-  _maxHp: 100
-  _CurrentHp: 0
 --- !u!114 &1632158682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -559,7 +544,7 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 1632158681}
+  - {fileID: 1632158685}
   ForceRemoteRenderTimeframe: 0
 --- !u!61 &1632158683
 BoxCollider2D:
@@ -649,6 +634,21 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1632158685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1632158678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b5559b28ff96bc4c927b4848620d7dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enableLogging: 1
+  _maxHp: 10
+  _CurrentHp: 0
 --- !u!1 &1982186743
 GameObject:
   m_ObjectHideFlags: 0

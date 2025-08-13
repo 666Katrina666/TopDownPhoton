@@ -10,6 +10,7 @@ using System.Collections;
 /// </summary>
 public class GameSceneInstaller : MonoInstaller
 {    
+    #region Prefabs
     [FoldoutGroup("Prefabs")]
     [InfoBox("Префабы для игровых компонентов")]
     [SerializeField] private GameObject playerFactoryPrefab;
@@ -17,14 +18,19 @@ public class GameSceneInstaller : MonoInstaller
     [SerializeField] private GameObject playerSpawnerPrefab;
     [FoldoutGroup("Prefabs")]
     [SerializeField] private GameObject networkInputHandlerPrefab;
+    #endregion
 
+    #region Combat
     [FoldoutGroup("Combat")]
     [InfoBox("Конфигурация боя и префаб снаряда")]
     [SerializeField] private CombatConfig combatConfig;
+    #endregion
     
+    #region Settings
     [FoldoutGroup("Debug Settings")]
     [InfoBox("Настройки отладки")]
     [SerializeField] private bool enableLogging = true;
+    #endregion
     
     /// <summary>
     /// Выводит сообщение в консоль, если включено логирование
@@ -62,6 +68,7 @@ public class GameSceneInstaller : MonoInstaller
         }
     }
     
+    #region Unity Callbacks
     public override void InstallBindings()
     {
         Log("Starting GameScene installation...");
@@ -69,10 +76,10 @@ public class GameSceneInstaller : MonoInstaller
         // Устанавливаем биндинги для игровых компонентов
         InstallPlayerBindings();
 
-            // Бинды боя
+        // Бинды боя
         InstallCombatBindings();
         
-            // Создаём настройщик боевых компонентов сразу, до возможного спавна игроков
+        // Создаём настройщик боевых компонентов сразу, до возможного спавна игроков
         CreateCombatSetupImmediate();
 
         Log("GameScene installation completed successfully");
@@ -80,10 +87,12 @@ public class GameSceneInstaller : MonoInstaller
         // Запускаем создание объектов после завершения установки
         StartCoroutine(CreatePlayerComponentsAfterInstall());
     }
+    #endregion
     
     /// <summary>
     /// Устанавливает биндинги для игровых компонентов
     /// </summary>
+    #region Installation
     private void InstallPlayerBindings()
     {
         Log("Installing player bindings...");
@@ -201,4 +210,5 @@ public class GameSceneInstaller : MonoInstaller
         Container.Inject(combatSetup);
         Log("PlayerCombatSetup created and injected (immediate)");
     }
+    #endregion
 } 

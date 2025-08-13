@@ -13,7 +13,7 @@ public class PlayerCombatSetup : LoggableMonoBehaviour
     private void OnEnable()
     {
         EventBus.Subscribe<PlayerSpawnedEvent>(OnPlayerSpawned);
-        Log("[PlayerCombatSetup] - Подписка на PlayerSpawnedEvent");
+        Log("Подписка на PlayerSpawnedEvent");
     }
 
     private void OnDisable()
@@ -36,20 +36,20 @@ public class PlayerCombatSetup : LoggableMonoBehaviour
         if (go.GetComponent<PlayerAttackController>() == null)
         {
             go.AddComponent<PlayerAttackController>();
-            Debug.Log("[PlayerCombatSetup] - PlayerAttackController добавлен на игрока");
+            Log($"PlayerAttackController добавлен на игрока");
         }
 
         // Добавляем здоровье при отсутствии
-        if (go.GetComponent<Health>() == null)
+        if (go.GetComponentInChildren<Health>() == null)
         {
             go.AddComponent<Health>();
-            Debug.Log("[PlayerCombatSetup] - Health добавлен на игрока");
+            Log("Health добавлен на игрока");
         }
 
         // Инжектим зависимости на объект игрока, чтобы контроллер атаки получил фабрику
         _container.InjectGameObject(go);
 
-        Log($"[PlayerCombatSetup] - Настроен бой для игрока {evt.PlayerRef}");
+        Log($"Настроен бой для игрока {evt.PlayerRef}");
     }
 }
 

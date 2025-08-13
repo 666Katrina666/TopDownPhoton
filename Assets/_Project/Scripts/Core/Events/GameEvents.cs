@@ -6,8 +6,11 @@ using Fusion;
 /// </summary>
 public struct GameStartedEvent
 {
-    public string GameSceneName;
-    
+    /// <summary>
+    /// Имя сцены, которую нужно загрузить
+    /// </summary>
+    public string GameSceneName { get; }
+
     public GameStartedEvent(string gameSceneName)
     {
         GameSceneName = gameSceneName;
@@ -19,9 +22,16 @@ public struct GameStartedEvent
 /// </summary>
 public struct PlayerSpawnedEvent
 {
-    public PlayerRef PlayerRef;
-    public NetworkObject PlayerObject;
-    
+    /// <summary>
+    /// Ссылка на игрока в Fusion
+    /// </summary>
+    public PlayerRef PlayerRef { get; }
+
+    /// <summary>
+    /// Сетевой объект игрока
+    /// </summary>
+    public NetworkObject PlayerObject { get; }
+
     public PlayerSpawnedEvent(PlayerRef playerRef, NetworkObject playerObject)
     {
         PlayerRef = playerRef;
@@ -34,8 +44,11 @@ public struct PlayerSpawnedEvent
 /// </summary>
 public struct PlayerDespawnedEvent
 {
-    public PlayerRef PlayerRef;
-    
+    /// <summary>
+    /// Ссылка на игрока в Fusion
+    /// </summary>
+    public PlayerRef PlayerRef { get; }
+
     public PlayerDespawnedEvent(PlayerRef playerRef)
     {
         PlayerRef = playerRef;
@@ -47,9 +60,16 @@ public struct PlayerDespawnedEvent
 /// </summary>
 public struct SceneChangedEvent
 {
-    public string PreviousScene;
-    public string CurrentScene;
-    
+    /// <summary>
+    /// Имя предыдущей сцены
+    /// </summary>
+    public string PreviousScene { get; }
+
+    /// <summary>
+    /// Имя текущей сцены
+    /// </summary>
+    public string CurrentScene { get; }
+
     public SceneChangedEvent(string previousScene, string currentScene)
     {
         PreviousScene = previousScene;
@@ -64,7 +84,6 @@ public struct SceneChangedEvent
 /// </summary>
 public struct RefreshLobbyPlayerListEvent
 {
-    // Пустая структура для события
 }
 
 /// <summary>
@@ -72,22 +91,4 @@ public struct RefreshLobbyPlayerListEvent
 /// </summary>
 public struct LeaveLobbyEvent
 {
-    // Пустая структура для события
-}
-
-/// <summary>
-/// Событие об изменении анимации персонажа
-/// </summary>
-public struct PlayerAnimationChangedEvent
-{
-    public PlayerRef PlayerRef;
-    public int Direction;
-    public bool IsMoving;
-    
-    public PlayerAnimationChangedEvent(PlayerRef playerRef, int direction, bool isMoving)
-    {
-        PlayerRef = playerRef;
-        Direction = direction;
-        IsMoving = isMoving;
-    }
 }

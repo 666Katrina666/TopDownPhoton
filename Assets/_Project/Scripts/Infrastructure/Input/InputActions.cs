@@ -171,6 +171,15 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MousePosition"",
+                    ""type"": ""Value"",
+                    ""id"": ""ebd6eee4-60b2-4f45-bcd9-6e6161998eae"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -182,6 +191,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""FirePrimary"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8ef92e0-9e19-43b8-9d86-ac2e2fac5d2c"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -196,6 +216,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // Combat
         m_Combat = asset.FindActionMap("Combat", throwIfNotFound: true);
         m_Combat_FirePrimary = m_Combat.FindAction("FirePrimary", throwIfNotFound: true);
+        m_Combat_MousePosition = m_Combat.FindAction("MousePosition", throwIfNotFound: true);
     }
 
     ~@InputActions()
@@ -374,6 +395,7 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Combat;
     private List<ICombatActions> m_CombatActionsCallbackInterfaces = new List<ICombatActions>();
     private readonly InputAction m_Combat_FirePrimary;
+    private readonly InputAction m_Combat_MousePosition;
     /// <summary>
     /// Provides access to input actions defined in input action map "Combat".
     /// </summary>
@@ -389,6 +411,10 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Combat/FirePrimary".
         /// </summary>
         public InputAction @FirePrimary => m_Wrapper.m_Combat_FirePrimary;
+        /// <summary>
+        /// Provides access to the underlying input action "Combat/MousePosition".
+        /// </summary>
+        public InputAction @MousePosition => m_Wrapper.m_Combat_MousePosition;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -418,6 +444,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @FirePrimary.started += instance.OnFirePrimary;
             @FirePrimary.performed += instance.OnFirePrimary;
             @FirePrimary.canceled += instance.OnFirePrimary;
+            @MousePosition.started += instance.OnMousePosition;
+            @MousePosition.performed += instance.OnMousePosition;
+            @MousePosition.canceled += instance.OnMousePosition;
         }
 
         /// <summary>
@@ -432,6 +461,9 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @FirePrimary.started -= instance.OnFirePrimary;
             @FirePrimary.performed -= instance.OnFirePrimary;
             @FirePrimary.canceled -= instance.OnFirePrimary;
+            @MousePosition.started -= instance.OnMousePosition;
+            @MousePosition.performed -= instance.OnMousePosition;
+            @MousePosition.canceled -= instance.OnMousePosition;
         }
 
         /// <summary>
@@ -494,5 +526,12 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnFirePrimary(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "MousePosition" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnMousePosition(InputAction.CallbackContext context);
     }
 }

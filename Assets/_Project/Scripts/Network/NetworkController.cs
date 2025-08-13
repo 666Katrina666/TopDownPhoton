@@ -11,6 +11,7 @@ using Core.Base;
 /// </summary>
 public class NetworkController : LoggableMonoBehaviour
 {
+    #region Dependencies
     [FoldoutGroup("Dependencies")]
     [InfoBox("Зависимости")]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
@@ -21,13 +22,17 @@ public class NetworkController : LoggableMonoBehaviour
     [FoldoutGroup("Dependencies")]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
     private DiContainer _container;
+    #endregion
     
+    #region Settings
     [FoldoutGroup("Settings")]
     [InfoBox("Настройки сетевого контроллера")]
     [SerializeField] private string _defaultGameScene = "GameScene";
     [FoldoutGroup("Settings")]
     [SerializeField] private string _defaultMainMenuScene = "MainMenuScene";
+    #endregion
     
+    #region Unity Callbacks
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -50,31 +55,10 @@ public class NetworkController : LoggableMonoBehaviour
     
     private void Start()
     {
-        // Проверяем, что зависимости инжектированы
-        if (_networkService == null || _sceneService == null)
-        {
-            LogWarning("Dependencies not injected! NetworkService: " + (_networkService != null) + ", SceneService: " + (_sceneService != null));
-            
-            // Попытка получить зависимости из контейнера
-            if (_networkService == null && _container != null)
-            {
-                _networkService = _container.Resolve<INetworkService>();
-            }
-            
-            if (_sceneService == null && _container != null)
-            {
-                _sceneService = _container.Resolve<ISceneService>();
-            }
-            
-            if (_networkService == null || _sceneService == null)
-            {
-                LogError("Failed to resolve dependencies from container!");
-                return;
-            }
-        }
-        
+        // Зависимости должны быть инжектированы через Zenject
         SubscribeToEvents();
     }
+    #endregion
     
     private void SubscribeToEvents()
     {
@@ -115,19 +99,19 @@ public class NetworkController : LoggableMonoBehaviour
     {
         if (string.IsNullOrEmpty(sceneName))
         {
-            LogError("NetworkController - Scene name is null or empty!");
+            LogError("Scene name is null or empty!");
             return;
         }
         
         if (_sceneService == null)
         {
-            LogError("NetworkController - SceneService is null! Cannot load scene.");
+            LogError("SceneService is null! Cannot load scene.");
             return;
         }
         
         if (_networkService == null)
         {
-            LogError("NetworkController - NetworkService is null! Cannot load scene.");
+            LogError("NetworkService is null! Cannot load scene.");
             return;
         }
         

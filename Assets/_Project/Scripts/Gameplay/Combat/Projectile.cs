@@ -41,7 +41,7 @@ public class Projectile : LoggableNetworkBehaviour
         {
             _despawnTick = Runner.Tick + Mathf.CeilToInt(_lifetimeSeconds / Runner.DeltaTime);
         }
-        Log("[Projectile] - Заспавнен");
+        Log("Заспавнен");
     }
 
     public override void FixedUpdateNetwork()
@@ -51,13 +51,12 @@ public class Projectile : LoggableNetworkBehaviour
             return;
         }
 
-        // Движение вперёд
         transform.position += (Vector3)(Direction * _speed * Runner.DeltaTime);
 
         // Принудительное уничтожение по времени жизни
         if (_despawnTick > 0 && Runner.Tick >= _despawnTick)
         {
-            Log("[Projectile] - Lifetime expired, despawn");
+            Log("Lifetime expired, despawn");
             Runner.Despawn(Object);
         }
     }
@@ -69,7 +68,6 @@ public class Projectile : LoggableNetworkBehaviour
             return;
         }
 
-        // Игнорируем владельца
         var otherNo = other.GetComponentInParent<NetworkObject>();
         if (otherNo != null && otherNo.InputAuthority == Object.InputAuthority)
         {
@@ -80,7 +78,7 @@ public class Projectile : LoggableNetworkBehaviour
         if (health != null)
         {
             health.ApplyDamage(_damage, Object.InputAuthority);
-            Log($"[Projectile] - Hit {other.name}, damage={_damage}");
+            Log($"Hit {other.name}, damage={_damage}");
             Runner.Despawn(Object);
         }
         else

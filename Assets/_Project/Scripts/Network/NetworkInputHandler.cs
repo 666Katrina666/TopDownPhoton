@@ -11,6 +11,7 @@ using Zenject;
 /// </summary>
 public class NetworkInputHandler : NetworkCallbackBase
 {
+    #region Runtime Data
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private bool _isConnected;
     
@@ -18,6 +19,12 @@ public class NetworkInputHandler : NetworkCallbackBase
     
     private InputActions _inputActions;
     
+    [FoldoutGroup("Runtime Data", false)]
+    [ShowInInspector, Sirenix.OdinInspector.ReadOnly]
+    [SerializeField] private Camera _camera;
+    #endregion
+
+    #region Unity Callbacks
     private void Awake()
     {
         _inputActions = new InputActions();
@@ -27,13 +34,19 @@ public class NetworkInputHandler : NetworkCallbackBase
     {
         _isConnected = _networkRunner != null;
         
-        Log($"[NetworkInputHandler] - Initialized. Connected: {_isConnected}");
+        Log($"Initialized. Connected: {_isConnected}");
         
         // Регистрируем себя как callback в NetworkRunner
         if (_networkRunner != null)
         {
             _networkRunner.AddCallbacks(this);
-            Log("[NetworkInputHandler] - Registered as NetworkRunner callback");
+            Log("Registered as NetworkRunner callback");
+        }
+
+        if (_camera == null)
+        {
+            _camera = Camera.main;
+            Log("Camera cached from Camera.main");
         }
     }
     
@@ -51,6 +64,7 @@ public class NetworkInputHandler : NetworkCallbackBase
     {
         _inputActions?.Dispose();
     }
+    #endregion
     
     /// <summary>
     /// Callback для обработки ввода от NetworkRunner
@@ -60,10 +74,6 @@ public class NetworkInputHandler : NetworkCallbackBase
     {
         NetworkInputData inputData = GetInputData();
         input.Set(inputData);
-        if (inputData.isFiring)
-        {
-            Debug.Log($"[NetworkInputHandler] - Fire captured this frame. Dir={inputData.moveDirection}");
-        }
     }
     
     /// <summary>
@@ -73,61 +83,46 @@ public class NetworkInputHandler : NetworkCallbackBase
     public NetworkInputData GetInputData()
     {
         Vector2 direction = GetMovementInput();
-        bool isInteracting = GetInteractionInput();
         bool isFiring = GetFireInput();
         
         return new NetworkInputData
         {
             moveDirection = direction,
             isMoving = direction.magnitude > 0.1f,
-            isInteracting = isInteracting,
-            isFiring = isFiring
+            isFiring = isFiring,
+            mouseWorldPosition = GetMouseWorldPosition()
         };
     }
     
     private Vector2 GetMovementInput()
     {
-        if (_inputActions != null)
-        {
-            return _inputActions.Movement.Move.ReadValue<Vector2>();
-        }
-        
-        // Fallback на старый ввод, если InputActions не инициализированы
-        Vector2 direction = Vector2.zero;
-        
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) direction += Vector2.up;
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) direction += Vector2.down;
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) direction += Vector2.left;
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) direction += Vector2.right;
-        
-        // Нормализуем вектор для равномерной скорости по диагонали
-        return Vector2.ClampMagnitude(direction, 1f);
-    }
-    
-    private bool GetInteractionInput()
-    {
-        // Используем старый ввод для взаимодействия, так как в локальном InputActions нет действия Interact
-        return Input.GetKey(KeyCode.E);
+        return _inputActions.Movement.Move.ReadValue<Vector2>();
     }
 
     private bool GetFireInput()
     {
-        // Если в InputActions добавлено действие FirePrimary, используем его, иначе fallback на ЛКМ
-        try
-        {
-            var fire = _inputActions?.FindAction("Combat/FirePrimary", throwIfNotFound: false);
-            if (fire != null)
-            {
-                bool pressed = fire.WasPressedThisFrame();
-                if (pressed)
-                {
-                    Debug.Log("[NetworkInputHandler] - FirePrimary action WasPressedThisFrame");
-                }
-                return pressed;
-            }
-        }
-        catch { /* игнорируем отсутствие карты действий */ }
+        bool pressed = _inputActions.Combat.FirePrimary.WasPressedThisFrame();
+        if (pressed)
+            Debug.Log("[NetworkInputHandler] - FirePrimary action WasPressedThisFrame");
+        return pressed;
+    }
 
-        return Input.GetMouseButtonDown(0);
+    private Vector2 GetMouseWorldPosition()
+    {
+        Vector2 screenPos = _inputActions.Combat.MousePosition.ReadValue<Vector2>();
+
+        if (_camera == null)
+        {
+            _camera = Camera.main;
+        }
+
+        if (_camera != null)
+        {
+            Vector3 sp = new Vector3(screenPos.x, screenPos.y, -_camera.transform.position.z);
+            Vector3 wp = _camera.ScreenToWorldPoint(sp);
+            return new Vector2(wp.x, wp.y);
+        }
+
+        return screenPos;
     }
 }

@@ -11,13 +11,17 @@ using Fusion;
 [CreateAssetMenu(fileName = "ProjectInstaller", menuName = "Installers/ProjectInstaller")]
 public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
 {    
+    #region Settings
     [FoldoutGroup("Debug Settings")]
     [InfoBox("Настройки отладки")]
     [SerializeField] private bool enableLogging = true;
+    #endregion
     
+    #region Network
     [FoldoutGroup("Network")]
     [InfoBox("Сетевые компоненты")]
     [SerializeField] private GameObject _networkServicePrefab;
+    #endregion
     
     /// <summary>
     /// Выводит сообщение в консоль, если включено логирование
@@ -55,6 +59,7 @@ public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
         }
     }
     
+    #region Installation
     public override void InstallBindings()
     {
         Log("Starting Project installation...");
@@ -88,13 +93,14 @@ public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
             var runnerObject = new GameObject("NetworkRunner");
             var networkRunner = runnerObject.AddComponent<NetworkRunner>();
             
-            // Устанавливаем DontDestroyOnLoad для NetworkRunner
             DontDestroyOnLoad(runnerObject);
             
             Container.Bind<NetworkRunner>().FromInstance(networkRunner).AsSingle();
             Log($"New NetworkRunner created and bound: {networkRunner.name}");
         }
     }
+    
+    #endregion
     
     private void InstallGlobalServices()
     {
@@ -110,6 +116,7 @@ public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
         Log("Global services installed");
     }
     
+    #region Factories
     private NetworkService CreateNetworkService(InjectContext context)
     {
         // Проверяем, есть ли уже NetworkService в сцене или в DontDestroyOnLoad
@@ -231,4 +238,5 @@ public class ProjectInstaller : ScriptableObjectInstaller<ProjectInstaller>
         Log("NetworkDebugger created as persistent singleton");
         return networkDebugger;
     }
+    #endregion
 } 

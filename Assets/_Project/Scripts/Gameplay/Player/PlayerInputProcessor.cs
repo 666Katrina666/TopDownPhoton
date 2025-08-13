@@ -9,24 +9,31 @@ using Core.Base;
 /// </summary>
 public class PlayerInputProcessor : LoggableNetworkBehaviour
 {
+    #region Settings
     [FoldoutGroup("Movement Settings")]
     [InfoBox("Настройки движения")]
     [SerializeField] private float _moveSpeed = 5f;
+    #endregion
     
+    #region Runtime Data
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private NetworkRunner _networkRunner;
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private PlayerRef _playerRef;
     [FoldoutGroup("Runtime Data", false)]
     [ShowInInspector, Sirenix.OdinInspector.ReadOnly] private bool _hasInputAuthority;
-    
+    #endregion
+
+    #region Animation
     [FoldoutGroup("Animation")]
     [InfoBox("Ссылка на контроллер анимаций")]
     [SerializeField] private PlayerAnimationController _animationController;
-    
+    #endregion
+
     private NetworkObject _networkObject;
     private Rigidbody2D _rigidbody;
     
+    #region Unity Callbacks
     private void Awake()
     {
         _networkObject = GetComponent<NetworkObject>();
@@ -49,7 +56,7 @@ public class PlayerInputProcessor : LoggableNetworkBehaviour
         _playerRef = Object.InputAuthority;
         _hasInputAuthority = Object.HasInputAuthority;
         
-        Log($"PlayerInputProcessor spawned. PlayerRef: {_playerRef}, HasInputAuthority: {_hasInputAuthority}");
+        Log($"Spawned. PlayerRef: {_playerRef}, HasInputAuthority: {_hasInputAuthority}");
     }
     
     public override void FixedUpdateNetwork()
@@ -59,6 +66,7 @@ public class PlayerInputProcessor : LoggableNetworkBehaviour
             ProcessInput(input);
         }
     }
+    #endregion
     
     private void ProcessInput(NetworkInputData input)
     {
@@ -82,16 +90,15 @@ public class PlayerInputProcessor : LoggableNetworkBehaviour
     {
         if (_animationController == null)
         {
-            // Ищем в дочерних объектах
             _animationController = GetComponentInChildren<PlayerAnimationController>();
             
             if (_animationController == null)
             {
-                LogWarning("[PlayerInputProcessor] [Валидация анимаций] - PlayerAnimationController не найден в дочерних объектах!");
+                LogWarning("[Валидация анимаций] - PlayerAnimationController не найден в дочерних объектах!");
             }
             else
             {
-                Log("[PlayerInputProcessor] [Валидация анимаций] - PlayerAnimationController найден автоматически");
+                Log("[Валидация анимаций] - PlayerAnimationController найден автоматически");
             }
         }
     }
