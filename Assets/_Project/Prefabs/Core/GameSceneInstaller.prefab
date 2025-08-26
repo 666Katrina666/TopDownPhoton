@@ -47,4 +47,6 @@ MonoBehaviour:
   playerFactoryPrefab: {fileID: 1000000000000000, guid: 492f99899399ffe4b9ffb500d6555520, type: 3}
   playerSpawnerPrefab: {fileID: 2000000000000000, guid: 3fe02a9d4583da14886684604dd65c57, type: 3}
   networkInputHandlerPrefab: {fileID: 88408753711981643, guid: a17c3ba6c2ef94343a9e87e2f3cf8c9e, type: 3}
+  combatConfig: {fileID: 11400000, guid: 29096521c8e07644fa3dc9bd1f530e5f, type: 2}
+  waveConfigurations: {fileID: 11400000, guid: 182e3a70191818b42b596cc017957fca, type: 2}
   enableLogging: 1

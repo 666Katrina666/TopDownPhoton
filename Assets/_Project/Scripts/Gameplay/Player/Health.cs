@@ -48,6 +48,7 @@ public class Health : LoggableNetworkBehaviour
         if (CurrentHp <= 0)
         {
             Log("HP reached 0");
+            EventBus.RaiseEvent(new DeathEvent(Object, source));
         }
     }
 
@@ -57,6 +58,21 @@ public class Health : LoggableNetworkBehaviour
         int dmg = Mathf.Max(0, amount);
         if (dmg <= 0) return;
         EventBus.RaiseEvent(new DamageTakenEvent(Object, default, dmg));
+    }
+
+    /// <summary>
+    /// Восстанавливает здоровье до максимального значения.
+    /// Разрешено только владельцу состояния (State Authority).
+    /// </summary>
+    public void ResetToMax()
+    {
+        if (Object.HasStateAuthority == false)
+        {
+            return;
+        }
+
+        CurrentHp = _maxHp;
+        EventBus.RaiseEvent(new HealthChangedEvent(Object, CurrentHp, _maxHp));
     }
 }
 

@@ -46,4 +46,26 @@ public struct HealthChangedEvent
 	}
 }
 
+/// <summary>
+/// Событие смерти объекта
+/// </summary>
+public struct DeathEvent
+{
+	/// <summary>
+	/// Умерший объект (сетевой объект)
+	/// </summary>
+	public NetworkObject Target { get; }
+
+	/// <summary>
+	/// Источник смерти (владелец ввода/игрок)
+	/// </summary>
+	public PlayerRef Source { get; }
+
+	public DeathEvent(NetworkObject target, PlayerRef source)
+	{
+		Target = target;
+		Source = source;
+	}
+}
+
 

@@ -24,6 +24,8 @@ public class GameSceneInstaller : MonoInstaller
     [FoldoutGroup("Combat")]
     [InfoBox("Конфигурация боя и префаб снаряда")]
     [SerializeField] private CombatConfig combatConfig;
+    [FoldoutGroup("Combat")]
+    [SerializeField] private WaveConfigurations waveConfigurations;
     #endregion
     
     #region Settings
@@ -128,11 +130,25 @@ public class GameSceneInstaller : MonoInstaller
         if (combatConfig == null)
         {
             LogWarning("CombatConfig не назначен! Боевые биндинги будут частично недоступны.");
-            return;
+        }
+        else
+        {
+            Container.Bind<CombatConfig>().FromInstance(combatConfig).AsSingle();
         }
 
-        Container.Bind<CombatConfig>().FromInstance(combatConfig).AsSingle();
+        if (waveConfigurations == null)
+        {
+            LogWarning("WaveConfigurations не назначен! Система волн будет недоступна.");
+        }
+        else
+        {
+            Container.Bind<WaveData[]>().FromInstance(waveConfigurations.Waves).AsSingle();
+        }
+
         Container.Bind<IProjectileFactory>().To<ProjectileFactory>().AsSingle();
+        Container.Bind<IWaveManager>().To<WaveManager>().AsSingle();
+        
+        Log("Combat bindings installed successfully");
     }
     
     /// <summary>
@@ -201,14 +217,17 @@ public class GameSceneInstaller : MonoInstaller
         {
             Container.Inject(existing);
             Log("PlayerCombatSetup already exists, injected");
-            return;
+        }
+        else
+        {
+            var combatSetupGo = new GameObject("PlayerCombatSetup");
+            combatSetupGo.transform.SetParent(this.transform);
+            var combatSetup = combatSetupGo.AddComponent<PlayerCombatSetup>();
+            Container.Inject(combatSetup);
+            Log("PlayerCombatSetup created and injected (immediate)");
         }
 
-        var combatSetupGo = new GameObject("PlayerCombatSetup");
-        combatSetupGo.transform.SetParent(this.transform);
-        var combatSetup = combatSetupGo.AddComponent<PlayerCombatSetup>();
-        Container.Inject(combatSetup);
-        Log("PlayerCombatSetup created and injected (immediate)");
+        // Пул объектов отключен — прямое инстанцирование врагов
     }
     #endregion
 } 
